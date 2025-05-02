@@ -1,7 +1,7 @@
 package fr.cfa.hospital.auth;
 
-import fr.quentin.portfolio.portfolioback.auth.dtos.LoginDto;
-import fr.quentin.portfolio.portfolioback.auth.dtos.LoginResponseDto;
+import fr.cfa.hospital.auth.dtos.LoginGetDto;
+import fr.cfa.hospital.auth.dtos.LoginPostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value = "/login", consumes = "application/json")
-    public ResponseEntity<LoginResponseDto> authenticate(@RequestBody LoginDto login) {
+    public ResponseEntity<LoginGetDto> authenticate(@RequestBody LoginPostDto login) {
         return ResponseEntity.ok(authService.authenticate(login));
     }
 }

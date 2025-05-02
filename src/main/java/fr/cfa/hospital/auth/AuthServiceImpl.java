@@ -1,7 +1,7 @@
 package fr.cfa.hospital.auth;
 
-import fr.quentin.portfolio.portfolioback.auth.dtos.LoginDto;
-import fr.quentin.portfolio.portfolioback.auth.dtos.LoginResponseDto;
+import fr.cfa.hospital.auth.dtos.LoginGetDto;
+import fr.cfa.hospital.auth.dtos.LoginPostDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
   private final AuthenticationManager authenticationManager;
 
   @Override
-  public LoginResponseDto authenticate(LoginDto login) throws AuthenticationException {
+  public LoginGetDto authenticate(LoginPostDto login) throws AuthenticationException {
     Authentication authenticate =
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.username(), login.password()));
     if (authenticate.isAuthenticated()) {

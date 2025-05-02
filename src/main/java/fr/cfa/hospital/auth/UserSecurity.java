@@ -1,6 +1,6 @@
 package fr.cfa.hospital.auth;
 
-import fr.quentin.portfolio.portfolioback.user.User;
+import fr.cfa.hospital.user.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

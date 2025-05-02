@@ -1,6 +1,6 @@
 package fr.cfa.hospital.user;
 
-import fr.quentin.portfolio.portfolioback.auth.UserSecurity;
+import fr.cfa.hospital.auth.UserSecurity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
