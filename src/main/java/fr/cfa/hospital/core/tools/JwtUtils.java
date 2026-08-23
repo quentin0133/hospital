@@ -1,71 +1,85 @@
 package fr.cfa.hospital.core.tools;
 
-import fr.cfa.hospital.core.configs.SecurityConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Component
 public class JwtUtils {
-    private static final long TOKEN_DURATION = Duration.ofSeconds(SecurityConfig.getEXPIRATION_TIME_SECONDS())
-                                                    .toMillis();
 
-    public static String extractUsername(String jwtToken) {
+    @Value("${secret.key}")
+    private String secretString;
+
+    @Value("${token.duration}")
+    private long tokenDuration;
+
+    private SecretKey secretKey;
+
+    // S'exécute juste après l'injection de @Value
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = Base64.getDecoder().decode(secretString);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String extractUsername(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
     }
 
-    public static boolean validateToken(String jwtToken, UserDetails userDetails) {
+    public boolean validateToken(String jwtToken, UserDetails userDetails) {
         final String username = extractUsername(jwtToken);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(jwtToken);
     }
 
-    public static boolean isTokenExpired(String jwtToken) {
-        return extractExpiration(jwtToken).isBefore(LocalDate.now());
+    public boolean isTokenExpired(String jwtToken) {
+        return extractExpiration(jwtToken).before(new Date());
     }
 
-    public static LocalDate extractExpiration(String jwtToken) {
-        return convertToLocalDateViaInstant(extractClaim(jwtToken, Claims::getExpiration));
+    public Date extractExpiration(String jwtToken) {
+        return extractClaim(jwtToken, Claims::getExpiration);
     }
 
-    public static <T> T extractClaim(String jwtToken, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String jwtToken, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(jwtToken);
         return claimsResolver.apply(claims);
     }
 
-    private static Claims extractAllClaims(String jwtToken) {
-        return Jwts.parser().setSigningKey(SecurityConfig.getSecretKey()).parseClaimsJws(jwtToken).getBody();
+    private Claims extractAllClaims(String jwtToken) {
+        return Jwts.parser()
+            .verifyWith(this.secretKey)
+            .build()
+            .parseSignedClaims(jwtToken)
+            .getPayload();
     }
 
-    private static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return Instant.ofEpochMilli(dateToConvert.getTime())
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    public String generateToken(UserDetails userDetails) {
+        return createToken(userDetails, new Date(System.currentTimeMillis() + tokenDuration));
     }
 
-    public static String generateToken(UserDetails userDetails) {
-        return createToken(userDetails, new Date(System.currentTimeMillis() + TOKEN_DURATION));
+    private String createToken(UserDetails userDetails, Date expiration) {
+        return Jwts.builder()
+            .claims(getClaims(userDetails))
+            .subject(userDetails.getUsername())
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(expiration)
+            .signWith(this.secretKey)
+            .compact();
     }
 
-    private static String createToken(UserDetails userDetails, Date expiration) {
-
-        return Jwts.builder().setClaims(getClaims(userDetails)).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(expiration)
-                .signWith(SignatureAlgorithm.HS256, SecurityConfig.getSecretKey())
-                .compact();
-    }
-
-    public static String getTokenFromRequest(HttpServletRequest request) {
+    public String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -73,12 +87,11 @@ public class JwtUtils {
         return null;
     }
 
-    private static Map<String, Object> getClaims(UserDetails userDetails) {
+    private Map<String, Object> getClaims(UserDetails userDetails) {
         if (userDetails == null)
             throw new UsernameNotFoundException("User not found");
         Map<String, Object> claims = new HashMap<>();
         claims.put("authorities", userDetails.getAuthorities());
-        //Add other claim if needed
         return claims;
     }
 }

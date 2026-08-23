@@ -1,7 +1,7 @@
 package fr.cfa.hospital.core.runner;
 
-import fr.cfa.hospital.user.User;
-import fr.cfa.hospital.user.UserRepository;
+import fr.cfa.hospital.auth.user.User;
+import fr.cfa.hospital.auth.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

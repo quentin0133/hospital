@@ -1,6 +1,8 @@
 package fr.cfa.hospital.core.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
+  private final ObjectMapper objectMapper;
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain) throws IOException {
@@ -26,18 +30,31 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     }
     catch (Exception ex) {
+      log.error("Une erreur s'est produite dans les filtres : {}", ex.getMessage());
+
+      int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+      String message = "Une erreur inattendue est survenue";
+
+      if (ex instanceof JwtException || ex.getCause() instanceof JwtException) {
+        status = HttpServletResponse.SC_UNAUTHORIZED;
+        message = ex.getMessage();
+
+        if(ex instanceof ExpiredJwtException) {
+          message = "Le token JWT est expiré. Veuillez vous reconnecter.";
+        }
+      }
+
       Map<String, Object> res = new LinkedHashMap<>();
-      res.put("errors", HttpStatus.UNAUTHORIZED.value());
-      res.put("status", ex.getMessage());
+      res.put("status", status);
+      res.put("error", HttpStatus.valueOf(status).getReasonPhrase());
+      res.put("message", message);
+      res.put("path", request.getRequestURI());
 
-      String jsonString = new ObjectMapper().writeValueAsString(res);
-
-      log.error(ex.getMessage());
-      Arrays.stream(ex.getStackTrace()).forEach(stackTrace -> log.error(stackTrace.toString()));
+      String jsonString = objectMapper.writeValueAsString(res);
 
       response.setContentType("application/json");
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getOutputStream().println(jsonString);
+      response.setStatus(status);
+      response.getWriter().write(jsonString);
     }
   }
 }

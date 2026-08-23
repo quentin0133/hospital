@@ -1,0 +1,317 @@
+{
+	"id": "cfd27e67-6b7f-45c3-a376-3c4dc43dc400",
+	"name": "Hospital",
+	"timestamp": "2025-12-27T11:50:07.366Z",
+	"collection_id": "31331079-425836f3-e2de-4504-858a-d5ec7d49e1a1",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 1,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-12-27T11:50:05.727Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "3e50583c-ff8e-49e5-ab80-edb33f8285a2",
+			"name": "findAll",
+			"url": "localhost:8080/api/patient?page=0&size=2",
+			"time": 83,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				83
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "d130937e-86f0-4cd9-8e52-9af3fb49ceef",
+			"name": "findByName",
+			"url": "localhost:8080/api/patient/name/o",
+			"time": 16,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				16
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "4faaf4da-9c02-4efc-a90f-221765a39aa4",
+			"name": "findById",
+			"url": "localhost:8080/api/patient/1",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				7
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "78047993-2a60-4649-a01b-ef8727a1059f",
+			"name": "findAll",
+			"url": "localhost:8080/api/doctor?page=0&size=5",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				9
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "b372b922-75a6-4b65-a50d-e73627b04561",
+			"name": "findByName",
+			"url": "localhost:8080/api/doctor/name/o?page=0&size=5",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				10
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "f5bb3eb9-2de2-4398-8576-321445a5e020",
+			"name": "findById",
+			"url": "localhost:8080/api/doctor/2",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				8
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "6bba9e26-de40-4425-9a51-a11b7ed5a257",
+			"name": "findByPatientId",
+			"url": "localhost:8080/api/consultation/patient/1?page=1&size=2",
+			"time": 25,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				25
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "3515ac9e-674b-4867-bd2f-f2229e16d078",
+			"name": "save",
+			"url": "localhost:8080/api/consultation",
+			"time": 45,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				45
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "bd0df4c4-0793-4d20-b919-76ea31f13f84",
+			"name": "update",
+			"url": "localhost:8080/api/consultation",
+			"time": 17,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				17
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "87c8b764-b33a-4535-8b30-d979038b90ee",
+			"name": "deleteById",
+			"url": "localhost:8080/api/consultation/2",
+			"time": 21,
+			"responseCode": {
+				"code": 204,
+				"name": "No Content"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				21
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "cadd8b61-50d2-4768-bcf5-a5b6c655f52a",
+			"name": "uploadFile",
+			"url": "localhost:8080/api/consultation/upload",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				9
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "2f0f5f86-b14f-4e79-b57f-9f1f7b7b4718",
+			"name": "update",
+			"url": "localhost:8080/api/prescription",
+			"time": 17,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				17
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "fa6bdaf0-ed52-415a-b828-b2f5b1079ecd",
+			"name": "login",
+			"url": "localhost:8080/api/auth/login",
+			"time": 138,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				138
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 405,
+	"collection": {
+		"requests": [
+			{
+				"id": "3e50583c-ff8e-49e5-ab80-edb33f8285a2",
+				"method": "GET"
+			},
+			{
+				"id": "d130937e-86f0-4cd9-8e52-9af3fb49ceef",
+				"method": "GET"
+			},
+			{
+				"id": "4faaf4da-9c02-4efc-a90f-221765a39aa4",
+				"method": "GET"
+			},
+			{
+				"id": "78047993-2a60-4649-a01b-ef8727a1059f",
+				"method": "GET"
+			},
+			{
+				"id": "b372b922-75a6-4b65-a50d-e73627b04561",
+				"method": "GET"
+			},
+			{
+				"id": "f5bb3eb9-2de2-4398-8576-321445a5e020",
+				"method": "GET"
+			},
+			{
+				"id": "6bba9e26-de40-4425-9a51-a11b7ed5a257",
+				"method": "GET"
+			},
+			{
+				"id": "3515ac9e-674b-4867-bd2f-f2229e16d078",
+				"method": "POST"
+			},
+			{
+				"id": "bd0df4c4-0793-4d20-b919-76ea31f13f84",
+				"method": "PUT"
+			},
+			{
+				"id": "87c8b764-b33a-4535-8b30-d979038b90ee",
+				"method": "DELETE"
+			},
+			{
+				"id": "cadd8b61-50d2-4768-bcf5-a5b6c655f52a",
+				"method": "PUT"
+			},
+			{
+				"id": "2f0f5f86-b14f-4e79-b57f-9f1f7b7b4718",
+				"method": "PUT"
+			},
+			{
+				"id": "fa6bdaf0-ed52-415a-b828-b2f5b1079ecd",
+				"method": "POST"
+			}
+		]
+	}
+}

@@ -1,7 +1,6 @@
 package fr.cfa.hospital.core.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -18,7 +17,7 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler({ResourceNotFoundException.class, NoResourceFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ResponseEntity<Object> handleNotFoundExceptions(Exception ex) {
         return getResponseEntity(ex, HttpStatus.NOT_FOUND);
