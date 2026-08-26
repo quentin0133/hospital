@@ -55,14 +55,14 @@ class UserDtoTest {
     }
 
     @Test
-    void testEquals_differentUsername() {
+    void testEquals_shouldBeEqualsWhenDifferentUsername() {
         UserDto c1 = new UserDto();
         c1.setUsername("1");
 
         UserDto c2 = new UserDto();
         c2.setUsername("2");
 
-        assertNotEquals(c1, c2);
+        assertEquals(c1, c2);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package fr.cfa.hospital.prescription;
 
-import fr.cfa.hospital.prescription.dtos.PrescriptionCommandDto;
-import fr.cfa.hospital.prescription.dtos.PrescriptionLightDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionPostDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,8 +30,8 @@ public interface PrescriptionController {
         @ApiResponse(responseCode = "400", description = "Invalid request"),
         @ApiResponse(responseCode = "404", description = "Prescription not found")
     })
-    ResponseEntity<PrescriptionLightDto> update(
-        @Parameter(description = "Details of the prescription to update", required = true) PrescriptionCommandDto dto
+    ResponseEntity<PrescriptionDto> update(
+        @Parameter(description = "Details of the prescription to update", required = true) PrescriptionPostDto dto
     );
 }
 

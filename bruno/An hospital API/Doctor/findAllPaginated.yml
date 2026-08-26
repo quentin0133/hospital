@@ -1,0 +1,146 @@
+info:
+  name: findAllPaginated
+  type: http
+  seq: 1
+  tags:
+    - doctor-controller
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/doctor?page=0&size=1"
+  params:
+    - name: page
+      value: "0"
+      type: query
+    - name: size
+      value: "1"
+      type: query
+    - name: sort
+      value: "[]"
+      type: query
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/doctor"
+      method: GET
+      params:
+        - name: page
+          value: "0"
+          type: query
+          disabled: true
+        - name: size
+          value: "1"
+          type: query
+          disabled: true
+        - name: sort
+          value: "[]"
+          type: query
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "totalPages": 0,
+            "totalElements": 0,
+            "pageable": {
+              "pageSize": 0,
+              "pageNumber": 0,
+              "offset": 0,
+              "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted": false
+              },
+              "paged": false,
+              "unpaged": false
+            },
+            "size": 0,
+            "content": [
+              {
+                "id": 0,
+                "version": 0,
+                "name": ""
+              }
+            ],
+            "number": 0,
+            "sort": {
+              "empty": false,
+              "sorted": false,
+              "unsorted": false
+            },
+            "first": false,
+            "last": false,
+            "numberOfElements": 0,
+            "empty": false
+          }
+  - name: 404 Response
+    description: Not Found
+    request:
+      url: "{{baseUrl}}/api/doctor"
+      method: GET
+      params:
+        - name: page
+          value: "0"
+          type: query
+          disabled: true
+        - name: size
+          value: "1"
+          type: query
+          disabled: true
+        - name: sort
+          value: "[]"
+          type: query
+          disabled: true
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/doctor"
+      method: GET
+      params:
+        - name: page
+          value: "0"
+          type: query
+          disabled: true
+        - name: size
+          value: "1"
+          type: query
+          disabled: true
+        - name: sort
+          value: "[]"
+          type: query
+          disabled: true
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"

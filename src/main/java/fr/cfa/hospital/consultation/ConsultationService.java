@@ -1,21 +1,26 @@
 package fr.cfa.hospital.consultation;
 
-import fr.cfa.hospital.consultation.dtos.ConsultationGetDto;
+import fr.cfa.hospital.consultation.dtos.ConsultationDto;
 import fr.cfa.hospital.consultation.dtos.ConsultationPostDto;
+import fr.cfa.hospital.file.dtos.FileDto;
+import fr.cfa.hospital.file.dtos.FilePostDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.io.IOException;
 
 public interface ConsultationService {
-    List<ConsultationGetDto> findAll(Pageable pageable);
+    Page<ConsultationDto> findAll(Pageable pageable);
 
-    List<ConsultationGetDto> findAll();
+    ConsultationDto save(ConsultationPostDto dto);
 
-    ConsultationGetDto save(ConsultationPostDto dto);
-
-    ConsultationGetDto update(ConsultationPostDto dto);
+    ConsultationDto update(ConsultationPostDto dto);
 
     void deleteById(long id);
 
-    ConsultationGetDto findById(long id);
+    ConsultationDto findById(long id);
+
+    Page<ConsultationDto> findByPatientId(long patientId, Pageable pageable);
+
+    FileDto uploadFiles(FilePostDto dto) throws IOException;
 }

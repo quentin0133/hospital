@@ -1,0 +1,35 @@
+opencollection: 1.0.0
+
+info:
+  name: Hospital API
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: "localhost"
+      port: "8080"
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  auth:
+    type: bearer
+    token: "{{jwt}}"
+
+docs:
+  content: Test
+  type: text/markdown
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    openapi:
+      - sourceUrl: http://localhost:8080/v3/api-docs
+        groupBy: tags
+        autoCheck: true
+        autoCheckInterval: 5

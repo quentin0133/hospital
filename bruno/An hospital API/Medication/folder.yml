@@ -1,0 +1,7 @@
+info:
+  name: Medication
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit

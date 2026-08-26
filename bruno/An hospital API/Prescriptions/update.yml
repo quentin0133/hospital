@@ -1,0 +1,140 @@
+info:
+  name: update
+  type: http
+  seq: 1
+  tags:
+    - Prescriptions
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/prescription"
+  body:
+    type: json
+    data: |-
+      {
+        "id": 1,
+        "version": 0,
+        "medicationId": 2,
+        "consultationId": 1,
+        "quantity": 10
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: Prescription updated successfully
+    request:
+      url: "{{baseUrl}}/api/prescription"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "medicationId": 0,
+            "consultationId": 0,
+            "quantity": 0
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "medicationId": 0,
+            "consultationId": 0,
+            "quantity": 0
+          }
+  - name: 400 Response
+    description: Invalid request
+    request:
+      url: "{{baseUrl}}/api/prescription"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "medicationId": 0,
+            "consultationId": 0,
+            "quantity": 0
+          }
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "medicationId": 0,
+            "consultationId": 0,
+            "quantity": 0
+          }
+  - name: 404 Response
+    description: Prescription not found
+    request:
+      url: "{{baseUrl}}/api/prescription"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "medicationId": 0,
+            "consultationId": 0,
+            "quantity": 0
+          }
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/prescription"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "medicationId": 0,
+            "consultationId": 0,
+            "quantity": 0
+          }
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+
+docs: Updates an existing prescription with the provided details.

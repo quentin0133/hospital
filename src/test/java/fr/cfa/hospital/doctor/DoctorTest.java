@@ -27,14 +27,14 @@ class DoctorTest {
         Doctor dto = new Doctor();
 
         assertNotNull(dto);
-        assertEquals(0, dto.getId());
+        assertNull(dto.getId());
         assertNull(dto.getName());
         assertEquals(new ArrayList<>(), dto.getConsultations());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        Doctor dto = new Doctor(1, "Jean pierre", new ArrayList<>());
+        Doctor dto = new Doctor(1L, 1, "Jean pierre", new ArrayList<>());
 
         assertEquals(1, dto.getId());
         assertEquals("Jean pierre", dto.getName());
@@ -44,7 +44,7 @@ class DoctorTest {
     @Test
     void testJacksonSerialization_validInput() throws Exception {
         Doctor original = new Doctor();
-        original.setId(1);
+        original.setId(1L);
         original.setName("Jean pierre");
         original.setConsultations(new ArrayList<>());
 
@@ -72,47 +72,47 @@ class DoctorTest {
 
     @Test
     void testEquals_shouldNotBeEqualsWhenDifferentId() {
-        Doctor d1 = new Doctor(1, "Jean pierre", new ArrayList<>());
-        Doctor d2 = new Doctor(2, "Jean pierre", new ArrayList<>());
+        Doctor d1 = new Doctor(1L, 1, "Jean pierre", new ArrayList<>());
+        Doctor d2 = new Doctor(2L, 1, "Jean pierre", new ArrayList<>());
 
         assertNotEquals(d1, d2);
     }
 
     @Test
-    void testEquals_differentName() {
-        Doctor d1 = new Doctor(1, "Jean pierre", new ArrayList<>());
-        Doctor d2 = new Doctor(1, "Marc", new ArrayList<>());
+    void testEquals_shouldBeEqualsWhenDifferentName() {
+        Doctor d1 = new Doctor(1L, 1, "Jean pierre", new ArrayList<>());
+        Doctor d2 = new Doctor(1L, 1, "Marc", new ArrayList<>());
 
-        assertNotEquals(d1, d2);
+        assertEquals(d1, d2);
     }
 
     @Test
-    void testEquals_differentConsultations() {
+    void testEquals_shouldBeEqualsWhenDifferentConsultations() {
         ArrayList<Consultation> list1 = new ArrayList<>();
         Consultation consultation1 = new Consultation();
-        consultation1.setId(1);
+        consultation1.setId(1L);
         list1.add(consultation1);
 
         ArrayList<Consultation> list2 = new ArrayList<>();
         Consultation consultation2 = new Consultation();
-        consultation1.setId(2);
+        consultation1.setId(2L);
         list2.add(consultation2);
 
-        Doctor d1 = new Doctor(1, "Jean pierre", list1);
-        Doctor d2 = new Doctor(1, "Jean pierre", list2);
+        Doctor d1 = new Doctor(1L, 1, "Jean pierre", list1);
+        Doctor d2 = new Doctor(1L, 1, "Jean pierre", list2);
 
-        assertNotEquals(d1, d2);
+        assertEquals(d1, d2);
     }
 
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         Doctor d1 = new Doctor();
-        d1.setId(1);
+        d1.setId(1L);
         d1.setName("Jean pierre");
         d1.setConsultations(new ArrayList<>());
 
         Doctor d2 = new Doctor();
-        d2.setId(1);
+        d2.setId(1L);
         d2.setName("Jean pierre");
         d2.setConsultations(new ArrayList<>());
 
@@ -122,12 +122,12 @@ class DoctorTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         Doctor d1 = new Doctor();
-        d1.setId(1);
+        d1.setId(1L);
         d1.setName("Jean pierre");
         d1.setConsultations(new ArrayList<>());
 
         Doctor d2 = new Doctor();
-        d2.setId(1);
+        d2.setId(1L);
         d2.setName("Jean pierre");
         d2.setConsultations(new ArrayList<>());
 
@@ -137,14 +137,16 @@ class DoctorTest {
     @Test
     void testToString() {
         Doctor original = new Doctor();
-        original.setId(1);
+        original.setId(1L);
         original.setName("Jean pierre");
         original.setConsultations(new ArrayList<>());
 
         String expected = "Doctor{" +
-            "id=" + original.getId() +
-            ", name='" + original.getName() + '\'' +
-            '}';
+                "id=" + original.getId() +
+                ", version=" + original.getVersion() +
+                ", name='" + original.getName() + '\'' +
+                ", consultations=" + original.getConsultations() +
+                '}';
         assertEquals(expected, original.toString());
     }
 }

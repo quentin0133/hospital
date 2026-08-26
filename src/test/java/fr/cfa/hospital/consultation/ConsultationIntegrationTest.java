@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cfa.hospital.HospitalApplication;
 import fr.cfa.hospital.auth.user.User;
 import fr.cfa.hospital.auth.user.UserSecurity;
-import fr.cfa.hospital.consultation.dtos.ConsultationGetDto;
+import fr.cfa.hospital.consultation.dtos.ConsultationPostDto;
+import fr.cfa.hospital.core.tools.JwtUtils;
 import fr.cfa.hospital.doctor.Doctor;
 import fr.cfa.hospital.doctor.DoctorRepository;
 import fr.cfa.hospital.patient.Patient;
@@ -53,16 +54,26 @@ class ConsultationIntegrationTest {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     private String jwtToken;
 
+    @Value("${file.storage.path}")
+    private String tempDir;
+
     @BeforeEach
-    void setup(@Value("${jwt.secret.key}") String jwtSecretKey) {
-        UserDetails user = new UserSecurity(new User(1, "test", "test"));
-        jwtToken = JwtUtils.generateToken(user, jwtSecretKey);
+    void setup() {
+        UserDetails user = new UserSecurity(new User(1L, "test", "test"));
+        jwtToken = jwtUtils.generateToken(user);
     }
 
     @AfterEach
-    void cleanup(@Value("${file.storage.path}") String tempDir) throws IOException {
+    void cleanup() throws IOException {
+        if (tempDir == null || (!tempDir.contains("target") && !tempDir.contains("test"))) {
+            throw new IllegalStateException("ALERT: Attempt to delete a non-test folder : " + tempDir);
+        }
+
         FileSystemUtils.deleteRecursively(Path.of(tempDir));
     }
 
@@ -80,9 +91,9 @@ class ConsultationIntegrationTest {
                     .param("size", pageSize))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isNotEmpty())
-            .andExpect(jsonPath("$._embedded.consultationFullDtoList[0].patient.name")
+            .andExpect(jsonPath("$.content[0].patient.name")
                 .value("Michel DUBOIS"))
-            .andExpect(jsonPath("$._embedded.consultationFullDtoList[0].doctor.name")
+            .andExpect(jsonPath("$.content[0].doctor.name")
                 .value("Jean-Pierre MARTIN"));
     }
 
@@ -99,12 +110,12 @@ class ConsultationIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.page.number").value(0));
+            .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test
     void testSave_shouldReturn201() throws Exception {
-        ConsultationGetDto dto = new ConsultationGetDto();
+        ConsultationPostDto dto = new ConsultationPostDto();
         dto.setPatientId(2L);
         dto.setDoctorId(2L);
         dto.setDate(LocalDate.of(2025, 5, 12));
@@ -122,7 +133,7 @@ class ConsultationIntegrationTest {
 
     @Test
     void testSave_shouldReturn400WhenWithId() throws Exception {
-        ConsultationCommandDto dto = new ConsultationCommandDto();
+        ConsultationPostDto dto = new ConsultationPostDto();
         dto.setId(1L);
         dto.setPatientId(2L);
         dto.setDoctorId(2L);
@@ -138,7 +149,7 @@ class ConsultationIntegrationTest {
 
     @Test
     void testUpdate_shouldReturn200() throws Exception {
-        ConsultationCommandDto dto = new ConsultationCommandDto();
+        ConsultationPostDto dto = new ConsultationPostDto();
         dto.setId(1L);
         dto.setPatientId(3L);
         dto.setDoctorId(3L);
@@ -157,7 +168,7 @@ class ConsultationIntegrationTest {
 
     @Test
     void testUpdate_shouldReturn400WhenWithoutId() throws Exception {
-        ConsultationCommandDto dto = new ConsultationCommandDto();
+        ConsultationPostDto dto = new ConsultationPostDto();
         dto.setPatientId(2L);
         dto.setDoctorId(2L);
         dto.setDate(LocalDate.of(2025, 5, 12));
@@ -223,10 +234,11 @@ class ConsultationIntegrationTest {
     @Test
     void testRetrieveFile_shouldReturn200() throws Exception {
         Consultation consultation = consultationRepository.saveAndFlush(new Consultation(
-            0,
+            0L,
+            1,
             LocalDate.now(),
-            patientRepository.saveAndFlush(new Patient(0, "Michel", new ArrayList<>())),
-            doctorRepository.saveAndFlush(new Doctor(0, "Bernard", new ArrayList<>())),
+            patientRepository.saveAndFlush(new Patient(0L, 1, "Michel", new ArrayList<>())),
+            doctorRepository.saveAndFlush(new Doctor(0L, 1, "Bernard", new ArrayList<>())),
             new ArrayList<>(),
             null
         ));
@@ -246,8 +258,9 @@ class ConsultationIntegrationTest {
 
         Consultation updated = consultationRepository.findById(consultation.getId()).orElseThrow();
 
-        mockMvc.perform(get("/files/" + updated.getFile().getStoredFileName()))
+        mockMvc.perform(get("/files/" + updated.getFile().getStoredFileName())
+                .header("Authorization", "Bearer " + jwtToken))
             .andExpect(status().isOk())
-            .andExpect(content().bytes("Hello World".getBytes())); // facultatif : vérifier le contenu
+            .andExpect(content().bytes("Hello World".getBytes()));
     }
 }

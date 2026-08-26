@@ -1,10 +1,9 @@
 package fr.cfa.hospital.patient;
 
 import fr.cfa.hospital.patient.dtos.PatientDto;
+import fr.cfa.hospital.patient.dtos.PatientPostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface PatientService {
     Page<PatientDto> findAll(Pageable pageable);
@@ -13,9 +12,9 @@ public interface PatientService {
 
     PatientDto findById(long id);
 
-    PatientDto save(PatientDto dto);
+    PatientDto save(PatientPostDto dto);
 
-    PatientDto update(PatientDto dto);
+    PatientDto update(PatientPostDto dto);
 
     void deleteById(long id);
 }

@@ -16,14 +16,14 @@ class UserTest {
         User dto = new User();
 
         assertNotNull(dto);
-        assertEquals(0, dto.getId());
+        assertNull(dto.getId());
         assertNull(dto.getUsername());
         assertNull(dto.getPassword());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        User dto = new User(1, "user", "pwd");
+        User dto = new User(1L, "user", "pwd");
 
         assertEquals(1, dto.getId());
         assertEquals("user", dto.getUsername());
@@ -43,10 +43,10 @@ class UserTest {
     @Test
     void testNotEquals_differentId() {
         User c1 = new User();
-        c1.setId(1);
+        c1.setId(1L);
 
         User c2 = new User();
-        c2.setId(2);
+        c2.setId(2L);
 
         assertNotEquals(c1, c2);
     }
@@ -76,12 +76,12 @@ class UserTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         User c1 = new User();
-        c1.setId(1);
+        c1.setId(1L);
         c1.setUsername("user");
         c1.setPassword("pwd");
 
         User c2 = new User();
-        c2.setId(1);
+        c2.setId(1L);
         c2.setUsername("user");
         c2.setPassword("pwd");
 
@@ -91,12 +91,12 @@ class UserTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         User c1 = new User();
-        c1.setId(1);
+        c1.setId(1L);
         c1.setUsername("user");
         c1.setPassword("pwd");
 
         User c2 = new User();
-        c2.setId(1);
+        c2.setId(1L);
         c2.setUsername("user");
         c2.setPassword("pwd");
 
@@ -105,12 +105,15 @@ class UserTest {
 
     @Test
     void testToString() {
-        User user = new User(1, "user", "pwd");
+        User original = new User();
+        original.setId(1L);
+        original.setUsername("user");
+        original.setPassword("pwd");
 
         String expected = "User{" +
-            "id=" + user.getId() +
-            ", username='" + user.getUsername() + '\'' +
+            "id=" + original.getId() +
+            ", username='" + original.getUsername() + '\'' +
             '}';
-        assertEquals(expected, user.toString());
+        assertEquals(expected, original.toString());
     }
 }

@@ -1,0 +1,103 @@
+info:
+  name: update
+  type: http
+  seq: 3
+  tags:
+    - medication-controller
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/medication"
+  body:
+    type: json
+    data: |-
+      {
+        "id": 0,
+        "version": 0,
+        "label": "",
+        "idsConsultations": []
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/medication"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "label": "",
+            "idsConsultations": []
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "label": ""
+          }
+  - name: 404 Response
+    description: Not Found
+    request:
+      url: "{{baseUrl}}/api/medication"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "label": "",
+            "idsConsultations": []
+          }
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/medication"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "label": "",
+            "idsConsultations": []
+          }
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"

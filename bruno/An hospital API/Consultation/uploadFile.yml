@@ -1,0 +1,104 @@
+info:
+  name: uploadFile
+  type: http
+  seq: 7
+  tags:
+    - consultation-controller
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/consultation/upload"
+  body:
+    type: multipart-form
+    data:
+      - name: id
+        type: text
+        value: "1"
+      - name: file
+        type: file
+        value:
+          - C:\Users\Quentin YAHIA\Downloads\kaaris-arti.png
+        contentType: image/png
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/consultation/upload"
+      method: PUT
+      body:
+        type: multipart-form
+        data:
+          - name: id
+            type: text
+            value: ""
+          - name: file
+            type: file
+            value: []
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: |-
+          {
+            "fileName": "",
+            "storedFileName": ""
+          }
+  - name: 404 Response
+    description: Not Found
+    request:
+      url: "{{baseUrl}}/api/consultation/upload"
+      method: PUT
+      body:
+        type: multipart-form
+        data:
+          - name: id
+            type: text
+            value: ""
+          - name: file
+            type: file
+            value: []
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/consultation/upload"
+      method: PUT
+      body:
+        type: multipart-form
+        data:
+          - name: id
+            type: text
+            value: ""
+          - name: file
+            type: file
+            value: []
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"

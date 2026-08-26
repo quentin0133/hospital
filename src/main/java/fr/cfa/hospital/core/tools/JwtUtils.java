@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,18 +20,17 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    @Value("${secret.key}")
+    @Value("${jwt.secret.key}")
     private String secretString;
 
-    @Value("${token.duration}")
+    @Value("${jwt.token.duration}")
     private long tokenDuration;
 
     private SecretKey secretKey;
 
-    // S'exécute juste après l'injection de @Value
     @PostConstruct
     public void init() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretString);
+        byte[] keyBytes = secretString.getBytes(StandardCharsets.UTF_8);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -66,7 +65,7 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return createToken(userDetails, new Date(System.currentTimeMillis() + tokenDuration));
+        return createToken(userDetails, new Date(System.currentTimeMillis() + tokenDuration * 1000));
     }
 
     private String createToken(UserDetails userDetails, Date expiration) {

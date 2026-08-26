@@ -1,26 +1,90 @@
 package fr.cfa.hospital.consultation.dtos;
 
-import fr.cfa.hospital.core.generic.BaseDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class ConsultationPostDto extends BaseDto {
-    private long number;
+public class ConsultationPostDto {
+    private Long id;
+
+    private int version;
 
     private LocalDate date;
 
-    private List<Long> idsMedication;
+    private long doctorId;
 
-    private long idDoctor;
+    private long patientId;
 
-    private long idPatient;
+    public ConsultationPostDto() {
+    }
+
+    public ConsultationPostDto(Long id, int version, LocalDate date, long doctorId, long patientId) {
+        this.id = id;
+        this.version = version;
+        this.date = date;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(long doctor) {
+        this.doctorId = doctor;
+    }
+
+    public long getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(long patient) {
+        this.patientId = patient;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        ConsultationPostDto that = (ConsultationPostDto) object;
+        return Objects.equals(id, that.id) && version == that.version && doctorId == that.doctorId && patientId == that.patientId && Objects.equals(date, that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ConsultationPostDto{" +
+                "id=" + id +
+                ", version=" + version +
+                ", date=" + date +
+                ", doctorId=" + doctorId +
+                ", patientId=" + patientId +
+                '}';
+    }
 }

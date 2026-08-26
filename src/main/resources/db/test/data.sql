@@ -1,4 +1,4 @@
-INSERT INTO app_user (username, password)
+INSERT INTO users (username, password)
 VALUES ('test', '$2a$12$X4u4Ig5F4jRa/7Ms0CpdounYb0VhshpcT8rrwPi/Z.dFex0tUqANW');
 
 INSERT INTO patient (name)

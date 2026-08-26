@@ -1,0 +1,11 @@
+info:
+  name: Prescriptions
+  type: folder
+  seq: 6
+
+request:
+  auth: inherit
+
+docs:
+  content: API to manage prescriptions (authentication required)
+  type: text/markdown

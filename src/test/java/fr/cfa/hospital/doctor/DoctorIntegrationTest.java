@@ -3,12 +3,12 @@ package fr.cfa.hospital.doctor;
 import fr.cfa.hospital.HospitalApplication;
 import fr.cfa.hospital.auth.user.User;
 import fr.cfa.hospital.auth.user.UserSecurity;
-import fr.cfa.hospital.doctor.dtos.DoctorLightDto;
+import fr.cfa.hospital.core.tools.JwtUtils;
+import fr.cfa.hospital.doctor.dtos.DoctorDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,12 +27,15 @@ class DoctorIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     private String jwtToken;
 
     @BeforeEach
-    void setup(@Value("${jwt.secret.key}") String jwtSecretKey) {
-        UserDetails user = new UserSecurity(new User(1, "test", "test"));
-        jwtToken = JwtUtils.generateToken(user, jwtSecretKey);
+    void setup() {
+        UserDetails user = new UserSecurity(new User(1L, "test", "test"));
+        jwtToken = jwtUtils.generateToken(user);
     }
 
     @Test
@@ -47,9 +50,9 @@ class DoctorIntegrationTest {
                 .param("page", page)
                 .param("size", pageSize))
         .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.doctorLightDtoList[0].name")
+            .andExpect(jsonPath("$.content[0].name")
                 .value("Jean-Pierre MARTIN"))
-            .andExpect(jsonPath("$._embedded.doctorLightDtoList[1].name")
+            .andExpect(jsonPath("$.content[1].name")
                 .value("Claire DUBOIS"));
     }
 
@@ -66,7 +69,7 @@ class DoctorIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.doctorLightDtoList[0].name")
+            .andExpect(jsonPath("$.content[0].name")
                 .value("Jean-Pierre MARTIN"));
     }
 
@@ -83,16 +86,16 @@ class DoctorIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.page.number").value(0));
+            .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test
     void findById() throws Exception {
         int id = 1;
-        DoctorLightDto expected = new DoctorLightDto(1, "Jean-Pierre MARTIN");
+        DoctorDto expected = new DoctorDto(1L, 0, "Jean-Pierre MARTIN");
 
         mockMvc.perform(
-                get("/api/doctor/{id}", id)
+                get("/api/doctor/id/{id}", id)
                     .header("Authorization","Bearer " + jwtToken)
                     .accept("application/json"))
             .andExpect(status().isOk())
@@ -104,7 +107,7 @@ class DoctorIntegrationTest {
         int id = 99;
 
         mockMvc.perform(
-                get("/api/doctor/{id}", id)
+                get("/api/doctor/id/{id}", id)
                     .header("Authorization","Bearer " + jwtToken)
                     .accept("application/json"))
             .andExpect(status().isNotFound());

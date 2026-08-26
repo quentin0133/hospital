@@ -2,18 +2,24 @@ package fr.cfa.hospital.doctor;
 
 import fr.cfa.hospital.consultation.Consultation;
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "doctors")
+@Table(name = "doctor")
 public class Doctor {
     @Id
-    @Column(name = "Matricule")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "serial_id")
+    private Long id;
 
-    @Column(name = "NomMED")
+    @Version
+    @ColumnDefault("0")
+    private int version;
+
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "doctor")
@@ -23,18 +29,27 @@ public class Doctor {
         this.consultations = new ArrayList<>();
     }
 
-    public Doctor(int id, String name, List<Consultation> consultations) {
+    public Doctor(Long id, int version, String name, List<Consultation> consultations) {
         this.id = id;
+        this.version = version;
         this.name = name;
         this.consultations = consultations;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getName() {
@@ -54,25 +69,25 @@ public class Doctor {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Doctor doctor = (Doctor) o;
-        return id == doctor.id &&
-            Objects.equals(name, doctor.name) &&
-            Objects.equals(consultations, doctor.consultations);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Doctor that = (Doctor) object;
+        return id != null && id.equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, consultations);
+        return getClass().hashCode();
     }
 
     @Override
     public String toString() {
         return "Doctor{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            '}';
+                "id=" + id +
+                ", version=" + version +
+                ", name='" + name + '\'' +
+                ", consultations=" + consultations +
+                '}';
     }
 }

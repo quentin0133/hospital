@@ -1,6 +1,5 @@
 package fr.cfa.hospital.auth.user;
 
-import fr.cfa.hospital.auth.UserSecurity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

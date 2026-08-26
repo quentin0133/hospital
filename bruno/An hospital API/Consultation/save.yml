@@ -1,0 +1,124 @@
+info:
+  name: save
+  type: http
+  seq: 5
+  tags:
+    - consultation-controller
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/consultation"
+  body:
+    type: json
+    data: |-
+      {
+        "date": "2026-09-12",
+        "doctorId": 2,
+        "patientId": 2
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/consultation"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "date": "",
+            "doctorId": 0,
+            "patientId": 0
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "doctor": {
+              "id": 0,
+              "version": 0,
+              "name": ""
+            },
+            "patient": {
+              "id": 0,
+              "name": ""
+            },
+            "medications": [
+              {
+                "id": 0,
+                "version": 0,
+                "label": ""
+              }
+            ],
+            "date": "",
+            "file": {
+              "fileName": "",
+              "storedFileName": ""
+            }
+          }
+  - name: 404 Response
+    description: Not Found
+    request:
+      url: "{{baseUrl}}/api/consultation"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "date": "",
+            "doctorId": 0,
+            "patientId": 0
+          }
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/consultation"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "id": 0,
+            "version": 0,
+            "date": "",
+            "doctorId": 0,
+            "patientId": 0
+          }
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"

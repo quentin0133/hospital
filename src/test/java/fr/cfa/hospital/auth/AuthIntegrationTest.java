@@ -2,6 +2,7 @@ package fr.cfa.hospital.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cfa.hospital.HospitalApplication;
+import fr.cfa.hospital.auth.dtos.LoginPostDto;
 import fr.cfa.hospital.auth.user.dtos.UserDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class AuthIntegrationTest {
 
     @Test
     void testAuthenticate_shouldReturn200WhenGoodCredentials() throws Exception {
-        LoginCommandDto login = new LoginCommandDto("test", "test");
+        LoginPostDto login = new LoginPostDto("test", "test");
         UserDto expected = new UserDto(1, "test");
 
         mockMvc.perform(
@@ -37,12 +38,14 @@ class AuthIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(login)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.user").value(expected));
+            .andExpect(jsonPath("$.user").value(expected))
+            .andExpect(jsonPath("$.user.id").value(1))
+            .andExpect(jsonPath("$.user.username").value("test"));
     }
 
     @Test
     void testAuthenticate_shouldReturn401WhenBadCredentials() throws Exception {
-        LoginCommandDto login = new LoginCommandDto();
+        LoginPostDto login = new LoginPostDto();
         login.setUsername("qsdfqfs");
         login.setPassword("qsfsqd");
 

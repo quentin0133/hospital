@@ -1,7 +1,7 @@
 package fr.cfa.hospital.prescription;
 
-import fr.cfa.hospital.prescription.dtos.PrescriptionCommandDto;
-import fr.cfa.hospital.prescription.dtos.PrescriptionLightDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionPostDto;
 
 /**
  * The interface Prescription service.
@@ -13,5 +13,5 @@ public interface PrescriptionService {
      * @param dto the dto
      * @return the prescription light dto
      */
-    PrescriptionLightDto update(PrescriptionCommandDto dto);
+    PrescriptionDto update(PrescriptionPostDto dto);
 }

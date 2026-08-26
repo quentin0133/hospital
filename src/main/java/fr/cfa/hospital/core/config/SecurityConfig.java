@@ -2,10 +2,6 @@ package fr.cfa.hospital.core.config;
 
 import fr.cfa.hospital.core.interceptor.ExceptionHandlerFilter;
 import fr.cfa.hospital.core.interceptor.JwtAuthFilter;
-import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,20 +22,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.crypto.SecretKey;
 import java.time.Duration;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
-@Slf4j
 public class SecurityConfig {
     // Public request for any method
-    @Getter
     private static final String[] AUTHORIZED_URLS = new String[]{
         "/api/auth/**",
         "/v3/api-docs/**",
@@ -61,13 +52,14 @@ public class SecurityConfig {
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final UserDetailsService userDetailsService;
 
-    public static SecretKey getSecretKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, ExceptionHandlerFilter exceptionHandlerFilter, UserDetailsService userDetailsService) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.exceptionHandlerFilter = exceptionHandlerFilter;
+        this.userDetailsService = userDetailsService;
     }
 
-    @Value("${secret.key}")
-    public void setSecretKey(String newSecretKey) {
+    @Value("${jwt.secret.key}")
+    public static void setSecretKey(String newSecretKey) {
         secretKey = newSecretKey;
     }
 

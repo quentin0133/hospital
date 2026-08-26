@@ -6,22 +6,25 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
   private final ObjectMapper objectMapper;
+  private final Logger logger;
+
+  public ExceptionHandlerFilter(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+    logger = LoggerFactory.getLogger(this.getClass());
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -30,17 +33,17 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     }
     catch (Exception ex) {
-      log.error("Une erreur s'est produite dans les filtres : {}", ex.getMessage());
+      logger.error("a error occured in the filters : {}", ex.getMessage());
 
       int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-      String message = "Une erreur inattendue est survenue";
+      String message = "A unknown error occured";
 
       if (ex instanceof JwtException || ex.getCause() instanceof JwtException) {
         status = HttpServletResponse.SC_UNAUTHORIZED;
         message = ex.getMessage();
 
         if(ex instanceof ExpiredJwtException) {
-          message = "Le token JWT est expiré. Veuillez vous reconnecter.";
+          message = "The token is expired, please log in again.";
         }
       }
 

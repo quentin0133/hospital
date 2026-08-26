@@ -1,6 +1,7 @@
 package fr.cfa.hospital.doctor;
 
 import fr.cfa.hospital.doctor.dtos.DoctorDto;
+import fr.cfa.hospital.doctor.dtos.DoctorPostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,11 +14,13 @@ public interface DoctorService {
 
     Page<DoctorDto> findByName(String search, Pageable pageable);
 
-    DoctorDto save(DoctorDto dto);
+    DoctorDto save(DoctorPostDto dto);
 
-    DoctorDto update(DoctorDto dto);
+    DoctorDto update(DoctorPostDto dto);
 
     void deleteById(long id);
 
     DoctorDto findById(long id);
+
+    Page<DoctorDto> findByNameContains(String name, Pageable pageable);
 }

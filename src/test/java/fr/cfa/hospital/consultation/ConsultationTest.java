@@ -23,25 +23,28 @@ class ConsultationTest {
         Consultation dto = new Consultation();
 
         assertNotNull(dto);
+        assertNull(dto.getId());
         assertNull(dto.getDate());
         assertNull(dto.getFile());
         assertNull(dto.getDoctor());
         assertNull(dto.getPatient());
         assertEquals(new ArrayList<>(), dto.getPrescriptions());
-        assertEquals(0, dto.getId());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        Consultation dto = new Consultation(1, LocalDate.now(),
-            new Patient(), new Doctor(), List.of(), new File());
+        Patient expectedPatient = new Patient();
+        Doctor expectedDoctor = new Doctor();
+        File expectedFile = new File();
+        Consultation dto = new Consultation(1L, 1, LocalDate.now(),
+                expectedPatient, expectedDoctor, List.of(), expectedFile);
 
         assertEquals(1, dto.getId());
         assertEquals(LocalDate.now(), dto.getDate());
-        assertEquals(new Patient(), dto.getPatient());
-        assertEquals(new Doctor(), dto.getDoctor());
+        assertEquals(expectedPatient, dto.getPatient());
+        assertEquals(expectedDoctor, dto.getDoctor());
         assertEquals(new ArrayList<>(), dto.getPrescriptions());
-        assertEquals(new File(), dto.getFile());
+        assertEquals(expectedFile, dto.getFile());
     }
 
     @Test
@@ -164,16 +167,24 @@ class ConsultationTest {
 
     @Test
     void testToString() {
-        Consultation consultation = new Consultation(
-            1, LocalDate.now(), new Patient(), new Doctor(), List.of(), new File()
-        );
+        Consultation original = new Consultation();
+        original.setId(1L);
+        original.setVersion(0);
+        original.setDate(LocalDate.now());
+        original.setPrescriptions(new ArrayList<>());
+        original.setFile(new File());
+        original.setPatient(new Patient());
+        original.setDoctor(new Doctor());
 
         String expected = "Consultation{" +
-            "id=" + consultation.getId() +
-            ", date=" + consultation.getDate() +
-            ", prescriptions=" + consultation.getPrescriptions() +
-            ", file=" + consultation.getFile() +
-            '}';
-        assertEquals(expected, consultation.toString());
+                "id=" + original.getId() +
+                ", version=" + original.getVersion() +
+                ", date=" + original.getDate() +
+                ", prescriptions=" + original.getPrescriptions() +
+                ", doctor=" + original.getDoctor() +
+                ", patient=" + original.getPatient() +
+                ", file=" + original.getFile() +
+                '}';
+        assertEquals(expected, original.toString());
     }
 }

@@ -3,8 +3,8 @@ package fr.cfa.hospital.prescription;
 import fr.cfa.hospital.consultation.Consultation;
 import fr.cfa.hospital.core.exception.NotProvidedUpdateIdException;
 import fr.cfa.hospital.medication.Medication;
-import fr.cfa.hospital.prescription.dtos.PrescriptionCommandDto;
-import fr.cfa.hospital.prescription.dtos.PrescriptionLightDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionPostDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,26 +35,26 @@ class PrescriptionServiceImplTest {
 
     @Test
     void update() {
-        Prescription prescription = new Prescription(1, new Medication(), new Consultation(), 5);
-        PrescriptionCommandDto request = new PrescriptionCommandDto(1L, 1, 1, 5);
-        PrescriptionLightDto expected = new PrescriptionLightDto(1L, 1, 1, 5);
+        Prescription prescription = new Prescription(1L, 1, new Medication(), new Consultation(), 5);
+        PrescriptionPostDto request = new PrescriptionPostDto(1L, 1, 1, 1, 5);
+        PrescriptionDto expected = new PrescriptionDto(1L, 0, 1, 1, 5);
 
         when(prescriptionRepository.saveAndFlush(any(Prescription.class))).thenReturn(prescription);
-        when(prescriptionMapper.toEntity(any(PrescriptionCommandDto.class))).thenReturn(prescription);
+        when(prescriptionMapper.toEntity(any(PrescriptionPostDto.class))).thenReturn(prescription);
         when(prescriptionMapper.toDto(any(Prescription.class))).thenReturn(expected);
 
-        PrescriptionLightDto result = prescriptionServiceImpl.update(request);
+        PrescriptionDto result = prescriptionServiceImpl.update(request);
 
         assertEquals(result, expected);
 
         verify(prescriptionRepository).saveAndFlush(any(Prescription.class));
-        verify(prescriptionMapper).toEntity(any(PrescriptionCommandDto.class));
+        verify(prescriptionMapper).toEntity(any(PrescriptionPostDto.class));
         verify(prescriptionMapper).toDto(any(Prescription.class));
     }
 
     @Test
     void update_withoutId() {
-        PrescriptionCommandDto request = new PrescriptionCommandDto(null, 1, 1, 5);
+        PrescriptionPostDto request = new PrescriptionPostDto(null, 1, 1, 1, 5);
 
         assertThrows(NotProvidedUpdateIdException.class, () -> prescriptionServiceImpl.update(request));
 
@@ -63,12 +63,20 @@ class PrescriptionServiceImplTest {
 
     @Test
     void testToString() {
-        Prescription prescription = new Prescription(1, new Medication(), new Consultation(), 5);
+        Prescription original = new Prescription();
+        original.setId(1L);
+        original.setVersion(1);
+        original.setMedication(new Medication());
+        original.setConsultation(new Consultation());
+        original.setQuantity(1);
 
         String expected = "Prescription{" +
-            "id=" + prescription.getId() +
-            ", quantity=" + prescription.getQuantity() +
-            '}';
-        assertEquals(expected, prescription.toString());
+                "id=" + original.getId() +
+                ", version=" + original.getVersion() +
+                ", medication=" + original.getMedication() +
+                ", consultation=" + original.getConsultation() +
+                ", quantity=" + original.getQuantity() +
+                '}';
+        assertEquals(expected, original.toString());
     }
 }

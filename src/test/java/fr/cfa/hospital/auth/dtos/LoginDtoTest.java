@@ -94,11 +94,14 @@ class LoginDtoTest {
 
     @Test
     void testToString() {
-        LoginDto login = new LoginDto(new UserDto(), "token");
+        LoginDto original = new LoginDto();
+        original.setUser(new UserDto());
+        original.setToken("token");
 
-        String expected = "LoginQueryDto{" +
-            "user=" + login.getUser() +
-            '}';
-        assertEquals(expected, login.toString());
+        String expected = "LoginDto{" +
+                "user=" + original.getUser() +
+                ", token='" + original.getToken() + '\'' +
+                '}';
+        assertEquals(expected, original.toString());
     }
 }

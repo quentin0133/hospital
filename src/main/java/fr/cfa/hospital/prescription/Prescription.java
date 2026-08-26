@@ -3,13 +3,7 @@ package fr.cfa.hospital.prescription;
 import fr.cfa.hospital.consultation.Consultation;
 import fr.cfa.hospital.medication.Medication;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.io.Serializable;
-import java.util.Objects;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  * The type Prescription.
@@ -19,27 +13,47 @@ import java.util.Objects;
 public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    @Version
+    @ColumnDefault("0")
+    private int version;
 
     @ManyToOne
-    @JoinColumn(name = "Code")
+    @JoinColumn(name = "medication_id")
     private Medication medication;
 
     @ManyToOne
-    @JoinColumn(name = "Numero")
+    @JoinColumn(name = "consultation_id")
     private Consultation consultation;
 
-    @Column(name = "NB_prises")
     private int quantity;
 
     public Prescription() {
     }
 
-    public Prescription(int id, Medication medication, Consultation consultation, int quantity) {
+    public Prescription(Long id, int version, Medication medication, Consultation consultation, int quantity) {
         this.id = id;
+        this.version = version;
         this.medication = medication;
         this.consultation = consultation;
         this.quantity = quantity;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public Medication getMedication() {
@@ -71,22 +85,22 @@ public class Prescription {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Prescription that = (Prescription) o;
-        return id == that.id &&
-            quantity == that.quantity &&
-            Objects.equals(medication, that.medication) &&
-            Objects.equals(consultation, that.consultation);
+        return id != null && id.equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, medication, consultation, quantity);
+        return getClass().hashCode();
     }
 
     @Override
     public String toString() {
         return "Prescription{" +
-            "id=" + id +
-            ", quantity=" + quantity +
-            '}';
+                "id=" + id +
+                ", version=" + version +
+                ", medication=" + medication +
+                ", consultation=" + consultation +
+                ", quantity=" + quantity +
+                '}';
     }
 }

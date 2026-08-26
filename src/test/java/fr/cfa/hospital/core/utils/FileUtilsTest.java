@@ -1,22 +1,21 @@
 package fr.cfa.hospital.core.utils;
 
+import fr.cfa.hospital.core.tools.FileUtils;
 import fr.cfa.hospital.file.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,73 +24,72 @@ import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class FileUtilsTest {
+    @TempDir
+    Path tempDir;
 
     @Test
     void upload_directoryNotExists() throws IOException {
-        try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS);
-             MockedStatic<UUID> uuidMocked = mockStatic(UUID.class, CALLS_REAL_METHODS)) {
-            Path mockPath = mock(Path.class);
-            UUID uuid = UUID.randomUUID();
-            File expected = new File("test.pdf", uuid + "-test.pdf");
-            MultipartFile multipartFile = new MockMultipartFile(
-                "file", "test.pdf", "application/pdf", "Hello World".getBytes()
-            );
+        MockMultipartFile mockFile = new MockMultipartFile(
+            "file",
+            "test-document.pdf",
+            "application/pdf",
+            "some data".getBytes()
+        );
 
-            uuidMocked.when(UUID::randomUUID).thenReturn(uuid);
-            fileMocked.when(() -> Files.exists(any(Path.class))).thenReturn(false);
-            fileMocked.when(() -> Files.createDirectories(any(Path.class))).thenReturn(mockPath);
-            fileMocked.when(() -> Files.copy(any(InputStream.class), any(Path.class), any(CopyOption.class)))
-                .thenReturn(1L);
+        Path nonExistentDir = tempDir.resolve("dossier_fantome");
+        String uploadDirPath = nonExistentDir.toString();
 
-            assertEquals(expected, FileUtils.upload(multipartFile, "files-test"));
+        assertFalse(Files.exists(nonExistentDir));
 
-            fileMocked.verify(() -> Files.createDirectories(any(Path.class)));
-            fileMocked.verify(() -> Files.copy(any(InputStream.class), any(Path.class), any(CopyOption.class)));
-        }
+        File result = FileUtils.upload(mockFile, uploadDirPath);
+
+        assertNotNull(result);
+        assertEquals("test-document.pdf", result.getFileName());
+        assertNotNull(result.getStoredFileName());
+
+        Path expectedFilePath = nonExistentDir.resolve(result.getStoredFileName());
+        assertTrue(Files.exists(expectedFilePath));
     }
 
     @Test
     void upload_directoryExists() throws IOException {
-        try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS);
-             MockedStatic<UUID> uuidMocked = mockStatic(UUID.class, CALLS_REAL_METHODS)) {
-            UUID uuid = UUID.randomUUID();
-            File expected = new File("test.pdf", uuid + "-test.pdf");
-            MultipartFile multipartFile = new MockMultipartFile(
-                "file", "test.pdf", "application/pdf", "Hello World".getBytes()
-            );
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test-document.pdf",
+                "application/pdf",
+                "some data".getBytes()
+        );
 
-            uuidMocked.when(UUID::randomUUID).thenReturn(uuid);
-            fileMocked.when(() -> Files.exists(any(Path.class))).thenReturn(true);
-            fileMocked.when(() -> Files.copy(any(InputStream.class), any(Path.class), any(CopyOption.class)))
-                .thenReturn(1L);
+        String uploadDirPath = tempDir.toString();
 
-            assertEquals(expected, FileUtils.upload(multipartFile, "files-test"));
+        assertTrue(Files.exists(tempDir));
 
-            fileMocked.verify(() -> Files.createDirectories(any(Path.class)), never());
-            fileMocked.verify(() -> Files.copy(any(InputStream.class), any(Path.class), any(CopyOption.class)));
-        }
+        File result = FileUtils.upload(mockFile, uploadDirPath);
+
+        assertNotNull(result);
+        assertEquals("test-document.pdf", result.getFileName());
+        assertNotNull(result.getStoredFileName());
+
+        Path expectedFilePath = tempDir.resolve(result.getStoredFileName());
+        assertTrue(Files.exists(expectedFilePath));
     }
 
     @Test
     void upload_fileEmpty() throws IOException {
-        try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS);
-             MockedStatic<UUID> uuidMocked = mockStatic(UUID.class, CALLS_REAL_METHODS)) {
-            MultipartFile multipartFile = new MockMultipartFile(
-                "file", "test.pdf", "application/pdf", new byte[0]
-            );
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test-document.pdf",
+                "application/pdf",
+                new byte[0]
+        );
 
-            assertNull(FileUtils.upload(multipartFile, "files-test"));
-
-            fileMocked.verify(() -> Files.createDirectories(any(Path.class)), never());
-            fileMocked.verify(() -> Files.copy(any(InputStream.class), any(Path.class), any(CopyOption.class)), never());
-            uuidMocked.verifyNoInteractions();
-        }
+        assertThrows(IllegalArgumentException.class, () -> FileUtils.upload(mockFile, "files-test"), "The file can't be empty or null");
     }
 
     @Test
     void upload_fileNull() throws IOException {
         try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS)) {
-            assertNull(FileUtils.upload(null, "files-test"));
+            assertThrows(IllegalArgumentException.class, () -> FileUtils.upload(null, "files-test"), "The file can't be empty or null");
 
             fileMocked.verify(() -> Files.createDirectories(any(Path.class)), never());
             fileMocked.verify(() -> Files.copy(any(InputStream.class), any(Path.class), any(CopyOption.class)), never());
@@ -99,38 +97,26 @@ class FileUtilsTest {
     }
 
     @Test
-    void delete() {
-        try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS);
-             MockedStatic<Paths> pathsMocked = mockStatic(Paths.class, CALLS_REAL_METHODS)) {
-            Path basePath = mock(Path.class);
-            Path resolvedPath = mock(Path.class);
-            Path normalizedPath = mock(Path.class);
+    void delete() throws IOException {
+        String storedName = "test.txt";
+        Path fakeFile = tempDir.resolve(storedName);
+        Files.writeString(fakeFile, "Lorem ipsum dolor sit amet");
 
-            fileMocked.when(() -> Files.exists(any(Path.class))).thenReturn(true);
-            fileMocked.when(() -> Files.delete(any(Path.class))).thenAnswer(invocation -> null);
-            pathsMocked.when(() -> Paths.get(anyString())).thenReturn(basePath);
-            when(basePath.resolve(anyString())).thenReturn(resolvedPath);
-            when(resolvedPath.normalize()).thenReturn(normalizedPath);
+        assertTrue(Files.exists(fakeFile));
 
-            assertDoesNotThrow(() -> FileUtils.delete(new File("", ""), "files-test"));
-        }
+        File file = new File("original.txt", storedName);
+        String uploadDirPath = tempDir.toString();
+
+        FileUtils.delete(file, uploadDirPath);
+        assertFalse(Files.exists(fakeFile));
     }
 
     @Test
-    void delete_directoryNotExists() {
-        try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS);
-             MockedStatic<Paths> pathsMocked = mockStatic(Paths.class, CALLS_REAL_METHODS)) {
-            Path basePath = mock(Path.class);
-            Path resolvedPath = mock(Path.class);
-            Path normalizedPath = mock(Path.class);
+    void delete_directoryNotExists() throws IOException {
+        String storedName = "does_not_exist.txt";
+        File file = new File("", "");
 
-            fileMocked.when(() -> Files.exists(any(Path.class))).thenReturn(false);
-            pathsMocked.when(() -> Paths.get(anyString())).thenReturn(basePath);
-            when(basePath.resolve(anyString())).thenReturn(resolvedPath);
-            when(resolvedPath.normalize()).thenReturn(normalizedPath);
-
-            assertThrows(FileNotFoundException.class, () -> FileUtils.delete(new File("", ""), "files-test"));
-        }
+        assertDoesNotThrow(() -> FileUtils.delete(file, storedName));
     }
 
     @Test

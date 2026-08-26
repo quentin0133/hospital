@@ -1,43 +1,54 @@
 package fr.cfa.hospital.medication;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import fr.cfa.hospital.prescription.Prescription;
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "MEDICAMENT")
+@Table(name = "medication")
 public class Medication {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Code")
-    private int id;
+    @Column(name = "code")
+    private Long id;
 
-    @Column(name = "Libellé")
+    @Version
+    @ColumnDefault("0")
+    private int version;
+
+    @Column(name = "label")
     private String label;
 
-    @OneToMany(mappedBy = "medication")
+    @OneToMany(mappedBy = "medication", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prescription> prescriptions;
 
     public Medication() {
         this.prescriptions = new ArrayList<>();
     }
 
-    public Medication(int id, String label, List<Prescription> prescriptions) {
+    public Medication(Long id, String label, List<Prescription> prescriptions) {
         this.id = id;
         this.label = label;
         this.prescriptions = prescriptions;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getLabel() {
@@ -61,22 +72,21 @@ public class Medication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Medication that = (Medication) o;
-        return id == that.id &&
-            Objects.equals(label, that.label) &&
-            Objects.equals(prescriptions, that.prescriptions);
+        return id != null && id.equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, label, prescriptions);
+        return getClass().hashCode();
     }
 
     @Override
     public String toString() {
         return "Medication{" +
-            "id=" + id +
-            ", label='" + label + '\'' +
-            ", prescriptions=" + prescriptions +
-            '}';
+                "id=" + id +
+                ", version=" + version +
+                ", label='" + label + '\'' +
+                ", prescriptions=" + prescriptions +
+                '}';
     }
 }

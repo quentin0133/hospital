@@ -1,22 +1,20 @@
 package fr.cfa.hospital.core.logs;
 
-import lombok.extern.slf4j.Slf4j;
+import fr.cfa.hospital.core.tools.LogUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 /**
  * The type Controller logging.
  */
 @Aspect
 @Component
-@Slf4j
 public class ControllerLogging {
-
     /**
      * Log controller object.
      *
@@ -26,23 +24,16 @@ public class ControllerLogging {
      */
     @Around("@annotation(LogController)")
     public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
+        Class<?> targetClass = joinPoint.getTarget().getClass();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String methodName = signature.getMethod().getName();
+        Logger targetLogger = LoggerFactory.getLogger(targetClass);
 
-        Object[] args = joinPoint.getArgs();
-
-        long start = System.currentTimeMillis();
-
-        log.info("{} : ENTER {}", methodName, Arrays.toString(args));
+        LogUtils.logEnter(targetLogger, methodName);
 
         Object result = joinPoint.proceed();
 
-        log.info(
-            "{} : EXIT ({} ms) with {}",
-            methodName,
-            result,
-            System.currentTimeMillis() - start
-        );
+        LogUtils.logExit(targetLogger, methodName);
 
         return result;
     }

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class UserMapperImplTest {
-    private UserMapperImpl userMapperImpl;
+    private UserMapper userMapperImpl;
 
     @BeforeEach
     void setUp() {
@@ -23,8 +23,10 @@ class UserMapperImplTest {
     @Test
     void toDto_validInput() {
         UserDto expected = new UserDto();
+        User user = new User();
+        user.setId(0L);
 
-        UserDto result = userMapperImpl.toDto(new UserSecurity(new User()));
+        UserDto result = userMapperImpl.toDto(user);
 
         assertEquals(expected, result);
     }
