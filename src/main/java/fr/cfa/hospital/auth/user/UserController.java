@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * The interface User controller.
  */
-@Tag(name = "User Management", description = "API to manage users and generate credentials for patients and doctors")
+@Tag(name = "User", description = "API to manage users")
 public interface UserController {
 
     /**

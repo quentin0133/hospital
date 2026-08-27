@@ -1,0 +1,123 @@
+info:
+  name: Create doctor account
+  type: http
+  seq: 2
+  tags:
+    - User_Management
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/user/add-doctor/:username?idDoctor=6a8f0835903bb0625fcf3993&username=DrPepe"
+  params:
+    - name: idDoctor
+      value: 6a8f0835903bb0625fcf3993
+      type: query
+      description: The unique ID of the doctor
+    - name: username
+      value: DrPepe
+      type: query
+      description: The desired username
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: Account successfully created
+    request:
+      url: "{{baseUrl}}/api/user/add-doctor/:username"
+      method: POST
+      params:
+        - name: idDoctor
+          value: ""
+          type: query
+          description: The unique ID of the doctor
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: "{}"
+  - name: 404 Response
+    description: Doctor not found
+    request:
+      url: "{{baseUrl}}/api/user/add-doctor/:username"
+      method: POST
+      params:
+        - name: idDoctor
+          value: ""
+          type: query
+          description: The unique ID of the doctor
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 409 Response
+    description: Doctor already has an account
+    request:
+      url: "{{baseUrl}}/api/user/add-doctor/:username"
+      method: POST
+      params:
+        - name: idDoctor
+          value: ""
+          type: query
+          description: The unique ID of the doctor
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 409
+      statusText: Conflict
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/user/add-doctor/:username"
+      method: POST
+      params:
+        - name: idDoctor
+          value: ""
+          type: query
+          description: The unique ID of the doctor
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+
+docs: Generates a user account with ROLE_DOCTOR for an existing doctor and returns a one-time temporary password.

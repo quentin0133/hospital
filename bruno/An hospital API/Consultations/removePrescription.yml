@@ -1,0 +1,103 @@
+info:
+  name: removePrescription
+  type: http
+  seq: 10
+  tags:
+    - Consultations
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication"
+  params:
+    - name: idConsultation
+      value: 6a8f059b903bb0625fcf3991
+      type: path
+      description: The ID of the consultation
+    - name: idMedication
+      value: 6a8f059b903bb0625fcf3992
+      type: path
+      description: The ID of the medication to remove
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: Prescription successfully removed
+    request:
+      url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication"
+      method: DELETE
+      params:
+        - name: idConsultation
+          value: 6a8f059b903bb0625fcf3991
+          type: path
+          description: The ID of the consultation
+        - name: idMedication
+          value: 6a8f059b903bb0625fcf3992
+          type: path
+          description: The ID of the medication to remove
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": "",
+            "version": 0,
+            "doctor": {
+              "id": "",
+              "version": 0,
+              "name": ""
+            },
+            "patient": {
+              "id": "",
+              "version": 0,
+              "name": ""
+            },
+            "medications": [
+              {
+                "id": "",
+                "version": 0,
+                "label": ""
+              }
+            ],
+            "date": "",
+            "file": {
+              "fileName": "",
+              "storedFileName": ""
+            }
+          }
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication"
+      method: DELETE
+      params:
+        - name: idConsultation
+          value: 6a8f059b903bb0625fcf3991
+          type: path
+          description: The ID of the consultation
+        - name: idMedication
+          value: 6a8f059b903bb0625fcf3992
+          type: path
+          description: The ID of the medication to remove
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+
+docs: Removes a specific medication from the prescriptions of an existing consultation.

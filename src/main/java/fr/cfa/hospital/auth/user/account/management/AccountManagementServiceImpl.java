@@ -1,5 +1,7 @@
 package fr.cfa.hospital.auth.user.account.management;
 
+import fr.cfa.hospital.auth.user.User;
+import fr.cfa.hospital.auth.user.UserSecurity;
 import fr.cfa.hospital.auth.user.UserService;
 import fr.cfa.hospital.auth.user.dtos.ChangePasswordDto;
 import fr.cfa.hospital.auth.user.dtos.UserDto;
@@ -10,6 +12,9 @@ import fr.cfa.hospital.doctor.DoctorService;
 import fr.cfa.hospital.doctor.dtos.DoctorDto;
 import fr.cfa.hospital.patient.PatientService;
 import fr.cfa.hospital.patient.dtos.PatientDto;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -73,11 +78,14 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 
     @Override
     public void changePassword(ChangePasswordDto changePassword) {
-        UserDto user = userService.findById(changePassword.getIdUser());
-        String encodedPassword = passwordEncoder.encode(changePassword.getNewPassword());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth.getPrincipal());
+        if (!(auth.getPrincipal() instanceof UserSecurity userSecurity)) {
+            throw new BadCredentialsException("The principal is not an instance of UserSecurity");
+        }
 
-        userService.checkPassword(user.getId(), encodedPassword);
-        userService.updatePassword(user.getId(), encodedPassword);
+        userService.checkPassword(userSecurity.getUser().getId(), changePassword.getCurrentPassword());
+        userService.updatePassword(userSecurity.getUser().getId(), passwordEncoder.encode(changePassword.getNewPassword()));
     }
 
     private String generateRandomPassword() {

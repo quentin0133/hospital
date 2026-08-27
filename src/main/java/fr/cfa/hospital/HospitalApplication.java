@@ -21,6 +21,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 public class HospitalApplication {
 
     public static void main(String[] args) {
+        java.util.Locale.setDefault(java.util.Locale.ENGLISH);
         SpringApplication.run(HospitalApplication.class, args);
     }
 

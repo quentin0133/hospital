@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, params = {"page", "size"})
     public ResponseEntity<Page<DoctorDto>> findAll(Pageable pageable) {
         return ResponseEntity.ok(service.findAll(pageable));
@@ -28,6 +30,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
@@ -35,6 +38,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @GetMapping(value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE, params = {"page", "size"})
     public ResponseEntity<Page<DoctorDto>> findByName(@PathVariable String name, Pageable pageable) {
         return ResponseEntity.ok(service.findByName(name, pageable));
@@ -42,6 +46,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorDto> save(@RequestBody DoctorPostDto dto) {
         return ResponseEntity.ok(service.save(dto));
@@ -49,6 +54,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
+    @PreAuthorize("#dto.id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorDto> update(@RequestBody DoctorPostDto dto) throws ResourceNotFoundException {
         return ResponseEntity.ok(service.update(dto));
@@ -56,6 +62,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) throws ResourceNotFoundException {
         service.deleteById(id);

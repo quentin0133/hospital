@@ -1,0 +1,123 @@
+info:
+  name: Create patient account
+  type: http
+  seq: 3
+  tags:
+    - User_Management
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/user/add-patient/:username?idPatient=6a8f087b903bb0625fcf3995&username=Michel1245"
+  params:
+    - name: idPatient
+      value: 6a8f087b903bb0625fcf3995
+      type: query
+      description: The unique ID of the patient
+    - name: username
+      value: Michel1245
+      type: query
+      description: The desired username
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: Account successfully created
+    request:
+      url: "{{baseUrl}}/api/user/add-patient/:username"
+      method: POST
+      params:
+        - name: idPatient
+          value: ""
+          type: query
+          description: The unique ID of the patient
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: "{}"
+  - name: 404 Response
+    description: Patient not found
+    request:
+      url: "{{baseUrl}}/api/user/add-patient/:username"
+      method: POST
+      params:
+        - name: idPatient
+          value: ""
+          type: query
+          description: The unique ID of the patient
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 409 Response
+    description: Patient already has an account
+    request:
+      url: "{{baseUrl}}/api/user/add-patient/:username"
+      method: POST
+      params:
+        - name: idPatient
+          value: ""
+          type: query
+          description: The unique ID of the patient
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 409
+      statusText: Conflict
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/user/add-patient/:username"
+      method: POST
+      params:
+        - name: idPatient
+          value: ""
+          type: query
+          description: The unique ID of the patient
+        - name: username
+          value: ""
+          type: query
+          description: The desired username
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+
+docs: Generates a user account with ROLE_PATIENT for an existing patient and returns a one-time temporary password.

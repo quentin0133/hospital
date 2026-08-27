@@ -6,10 +6,12 @@ import fr.cfa.hospital.medication.dtos.MedicationDto;
 import fr.cfa.hospital.medication.dtos.MedicationPostDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/medication")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class MedicationControllerImpl implements MedicationController {
     private final MedicationService service;
 

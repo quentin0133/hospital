@@ -34,6 +34,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
@@ -41,6 +42,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE, params = {"page", "size"})
     public ResponseEntity<Page<ConsultationDto>> findByPatientId(@PathVariable String id, Pageable pageable) {
         return ResponseEntity.ok(service.findByPatientId(id, pageable));
@@ -48,6 +50,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationDto> save(@RequestBody ConsultationPostDto dto) {
         return ResponseEntity.status(201).body(service.save(dto));
@@ -55,6 +58,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationDto> update(@RequestBody ConsultationPostDto dto) throws ResourceNotFoundException {
         return ResponseEntity.ok(service.update(dto));
@@ -62,6 +66,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @PutMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileDto> uploadFile(@ModelAttribute FilePostDto requestDto) throws IOException {
         return ResponseEntity.ok(service.uploadFiles(requestDto));
@@ -69,6 +74,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) throws ResourceNotFoundException {
         service.deleteById(id);
@@ -77,6 +83,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @PostMapping(value = "/{idConsultation}/medication/{idMedication}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationDto> addPrescription(@PathVariable String idConsultation, @PathVariable String idMedication, @RequestParam int quantity) {
         return ResponseEntity.status(201).body(service.addPrescription(idConsultation, idMedication, quantity));
@@ -84,6 +91,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @DeleteMapping(value = "/{idConsultation}/medication/{idMedication}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationDto> removePrescription(@PathVariable String idConsultation, @PathVariable String idMedication) throws ResourceNotFoundException {
         return ResponseEntity.ok(service.removePrescription(idConsultation, idMedication));

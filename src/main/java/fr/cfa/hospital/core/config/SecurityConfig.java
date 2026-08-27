@@ -1,7 +1,9 @@
 package fr.cfa.hospital.core.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cfa.hospital.core.interceptor.ExceptionHandlerFilter;
 import fr.cfa.hospital.core.interceptor.JwtAuthFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.Duration;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +35,7 @@ import java.util.Map;
 public class SecurityConfig {
     // Public request for any method
     private static final String[] AUTHORIZED_URLS = new String[]{
-        "/api/auth/**",
+        "/api/auth/login",
         "/v3/api-docs/**",
         "/swagger-ui.html",
         "/swagger-ui/**"
@@ -47,19 +50,16 @@ public class SecurityConfig {
 
     private static final int EXPIRATION_TIME_SECONDS = 60 * 60; // unit : second => 1 hour
 
+    private final ObjectMapper objectMapper;
     private final JwtAuthFilter jwtAuthFilter;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, ExceptionHandlerFilter exceptionHandlerFilter, UserDetailsService userDetailsService) {
+    public SecurityConfig(ObjectMapper objectMapper, JwtAuthFilter jwtAuthFilter, ExceptionHandlerFilter exceptionHandlerFilter, UserDetailsService userDetailsService) {
+        this.objectMapper = objectMapper;
         this.jwtAuthFilter = jwtAuthFilter;
         this.exceptionHandlerFilter = exceptionHandlerFilter;
         this.userDetailsService = userDetailsService;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -78,6 +78,32 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, AUTHORIZED_URLS_BY_METHOD.get(HttpMethod.POST)).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, AUTHORIZED_URLS_BY_METHOD.get(HttpMethod.OPTIONS)).permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+
+                            Map<String, Object> res = new LinkedHashMap<>();
+                            res.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+                            res.put("error", "Unauthorized");
+                            res.put("message", "Required authentication.");
+                            res.put("path", request.getRequestURI());
+
+                            response.getWriter().write(objectMapper.writeValueAsString(res));
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+
+                            Map<String, Object> res = new LinkedHashMap<>();
+                            res.put("status", HttpServletResponse.SC_FORBIDDEN);
+                            res.put("error", "Forbidden");
+                                res.put("message", "You do not have permission to access this resource");
+                            res.put("path", request.getRequestURI());
+
+                            response.getWriter().write(objectMapper.writeValueAsString(res));
+                        })
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)

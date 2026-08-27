@@ -1,0 +1,150 @@
+info:
+  name: Get all users
+  type: http
+  seq: 1
+  tags:
+    - User_Management
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/user"
+  params:
+    - name: page
+      value: "0"
+      type: query
+      disabled: true
+    - name: size
+      value: "1"
+      type: query
+      disabled: true
+    - name: sort
+      value: "[]"
+      type: query
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 200 Response
+    description: Successfully retrieved the list of users
+    request:
+      url: "{{baseUrl}}/api/user"
+      method: GET
+      params:
+        - name: page
+          value: "0"
+          type: query
+          disabled: true
+        - name: size
+          value: "1"
+          type: query
+          disabled: true
+        - name: sort
+          value: "[]"
+          type: query
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "totalElements": 0,
+            "totalPages": 0,
+            "size": 0,
+            "content": [
+              {
+                "id": "",
+                "username": "",
+                "role": ""
+              }
+            ],
+            "number": 0,
+            "sort": {
+              "empty": false,
+              "sorted": false,
+              "unsorted": false
+            },
+            "first": false,
+            "last": false,
+            "numberOfElements": 0,
+            "pageable": {
+              "offset": 0,
+              "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted": false
+              },
+              "pageSize": 0,
+              "pageNumber": 0,
+              "paged": false,
+              "unpaged": false
+            },
+            "empty": false
+          }
+  - name: 404 Response
+    description: Not Found
+    request:
+      url: "{{baseUrl}}/api/user"
+      method: GET
+      params:
+        - name: page
+          value: "0"
+          type: query
+          disabled: true
+        - name: size
+          value: "1"
+          type: query
+          disabled: true
+        - name: sort
+          value: "[]"
+          type: query
+          disabled: true
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/user"
+      method: GET
+      params:
+        - name: page
+          value: "0"
+          type: query
+          disabled: true
+        - name: size
+          value: "1"
+          type: query
+          disabled: true
+        - name: sort
+          value: "[]"
+          type: query
+          disabled: true
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+
+docs: Retrieves a paginated list of all users registered in the system.

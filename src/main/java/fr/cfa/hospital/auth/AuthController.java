@@ -52,7 +52,7 @@ public interface AuthController {
             @ApiResponse(responseCode = "401", description = "Incorrect current password"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    ResponseEntity<String> changePassword(
+    ResponseEntity<Void> changePassword(
             @RequestBody @Parameter(description = "Data required to change the password (current and new password)", required = true) ChangePasswordDto changePasswordDto
     );
 }

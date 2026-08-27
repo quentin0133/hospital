@@ -35,7 +35,7 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        userServiceImpl = new UserServiceImpl(userRepository, userMapper, passwordEncoder);
+        userServiceImpl = new UserServiceImpl(userRepository, userMapper);
     }
 
     @Test

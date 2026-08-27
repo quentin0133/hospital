@@ -31,7 +31,7 @@ extensions:
     openapi:
       - sourceUrl: http://localhost:8080/v3/api-docs
         groupBy: tags
-        lastSyncDate: 2026-08-26T16:01:20.321Z
-        specHash: 92a81c52b7d34ffb121570ea2a85e380
+        lastSyncDate: 2026-08-27T11:16:31.720Z
+        specHash: 0ba4f666862fc3206b0f6ee81ab583e1
         autoCheck: true
         autoCheckInterval: 5

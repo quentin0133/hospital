@@ -9,16 +9,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repository, UserMapper mapper) {
+    public UserServiceImpl(UserRepository repository, UserMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,9 +50,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void checkPassword(String idUser, String encodedPassword) throws PasswordException {
+    public void checkPassword(String idUser, String rawOldPassword) throws PasswordException {
         User user = repository.findById(idUser).orElseThrow(() -> new ResourceNotFoundException("User", idUser));
-        if (!user.getPassword().equals(encodedPassword)) {
+        if (!passwordEncoder.matches(rawOldPassword, user.getPassword())) {
             throw new PasswordException();
         }
     }

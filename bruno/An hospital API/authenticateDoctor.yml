@@ -1,7 +1,7 @@
 info:
-  name: authenticate
+  name: authenticateDoctor
   type: http
-  seq: 1
+  seq: 3
   tags:
     - auth-controller
 
@@ -12,8 +12,8 @@ http:
     type: json
     data: |-
       {
-        "username": "{{username}}",
-        "password": "{{password}}"
+        "username": "DrPepe",
+        "password": "PepeLeMeilleurs"
       }
 
 runtime:

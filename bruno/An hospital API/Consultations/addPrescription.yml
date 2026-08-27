@@ -1,0 +1,112 @@
+info:
+  name: addPrescription
+  type: http
+  seq: 9
+  tags:
+    - Consultations
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication?quantity=3"
+  params:
+    - name: quantity
+      value: "3"
+      type: query
+    - name: idConsultation
+      value: 6a8f09a29feb1e2626ad69a0
+      type: path
+    - name: idMedication
+      value: 6a8f059b903bb0625fcf3991
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: 201 Response
+    description: Prescription successfully added
+    request:
+      url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication"
+      method: POST
+      params:
+        - name: idConsultation
+          value: 6a8f059b903bb0625fcf3991
+          type: path
+          description: The ID of the consultation
+        - name: idMedication
+          value: 6a8f059b903bb0625fcf3992
+          type: path
+          description: The ID of the medication to prescribe
+        - name: quantity
+          value: "2"
+          type: query
+          description: The prescribed quantity
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": "",
+            "version": 0,
+            "doctor": {
+              "id": "",
+              "version": 0,
+              "name": ""
+            },
+            "patient": {
+              "id": "",
+              "version": 0,
+              "name": ""
+            },
+            "medications": [
+              {
+                "id": "",
+                "version": 0,
+                "label": ""
+              }
+            ],
+            "date": "",
+            "file": {
+              "fileName": "",
+              "storedFileName": ""
+            }
+          }
+  - name: 500 Response
+    description: Internal Server Error
+    request:
+      url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication"
+      method: POST
+      params:
+        - name: idConsultation
+          value: 6a8f059b903bb0625fcf3991
+          type: path
+          description: The ID of the consultation
+        - name: idMedication
+          value: 6a8f059b903bb0625fcf3992
+          type: path
+          description: The ID of the medication to prescribe
+        - name: quantity
+          value: "2"
+          type: query
+          description: The prescribed quantity
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: "*/*"
+      body:
+        type: text
+        data: "{}"
+
+docs: Adds a medication with a specific quantity to a consultation's list of prescriptions.

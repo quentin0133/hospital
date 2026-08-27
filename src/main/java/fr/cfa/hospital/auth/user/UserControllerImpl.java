@@ -1,7 +1,6 @@
 package fr.cfa.hospital.auth.user;
 
 import fr.cfa.hospital.auth.user.account.management.AccountManagementService;
-import fr.cfa.hospital.auth.user.dtos.ChangePasswordDto;
 import fr.cfa.hospital.auth.user.dtos.UserDto;
 import fr.cfa.hospital.auth.user.dtos.UserTemporaryCredentials;
 import fr.cfa.hospital.core.logs.LogController;
@@ -34,7 +33,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @LogController
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value = "/add-patient/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-patient/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserTemporaryCredentials> savePatient(@RequestParam String idPatient, @PathVariable String username) {
         return ResponseEntity.ok(accountService.savePatient(idPatient, username));
     }
@@ -42,7 +41,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @LogController
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value = "/add-doctor/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-doctor/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserTemporaryCredentials> saveDoctor(@RequestParam String idDoctor, @PathVariable String username) {
         return ResponseEntity.ok(accountService.saveDoctor(idDoctor, username));
     }
