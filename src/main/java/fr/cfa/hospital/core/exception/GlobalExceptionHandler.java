@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -47,10 +46,10 @@ public class GlobalExceptionHandler {
         return getResponseEntity(ex, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
-    protected ResponseEntity<Object> handleObjectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
-        return getResponseEntity("The provided version does not match the current version", ex, HttpStatus.CONFLICT);
-    }
+//    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+//    protected ResponseEntity<Object> handleObjectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
+//        return getResponseEntity("The provided version does not match the current version", ex, HttpStatus.CONFLICT);
+//    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -96,10 +95,6 @@ public class GlobalExceptionHandler {
 
             originClass = firstElement.getClassName();
             originMethod = firstElement.getMethodName();
-
-            String simpleClassName = originClass.substring(originClass.lastIndexOf('.') + 1);
-
-            body.put("origin", simpleClassName + "." + originMethod);
         }
 
         logger.error("Error {} thrown in {} (method {}) - Message: {}",

@@ -20,7 +20,7 @@ public class MedicationControllerImpl implements MedicationController {
     @Override
     @LogController
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MedicationDto> findById(@PathVariable long id) {
+    public ResponseEntity<MedicationDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -41,7 +41,7 @@ public class MedicationControllerImpl implements MedicationController {
     @Override
     @LogController
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable long id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> deleteById(@PathVariable String id) throws ResourceNotFoundException {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }

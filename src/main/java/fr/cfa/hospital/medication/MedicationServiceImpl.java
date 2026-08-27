@@ -3,14 +3,12 @@ package fr.cfa.hospital.medication;
 import fr.cfa.hospital.core.exception.ResourceNotFoundException;
 import fr.cfa.hospital.medication.dtos.MedicationDto;
 import fr.cfa.hospital.medication.dtos.MedicationPostDto;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class MedicationServiceImpl implements MedicationService {
     private final MedicationRepository repository;
     private final MedicationMapper mapper;
@@ -26,22 +24,22 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     @Override
-    public MedicationDto findById(long id) {
+    public MedicationDto findById(String id) {
         return repository.findById(id).map(mapper::toDto).orElseThrow(() -> new ResourceNotFoundException("Patient", id));
     }
 
     @Override
     public MedicationDto save(MedicationPostDto dto) {
-        return mapper.toDto(repository.saveAndFlush(mapper.toEntity(dto)));
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
     public MedicationDto update(MedicationPostDto dto) {
-        return mapper.toDto(repository.saveAndFlush(mapper.toEntity(dto)));
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         if (!repository.existsById(id)) throw new ResourceNotFoundException("Medication", id);
         repository.deleteById(id);
     }

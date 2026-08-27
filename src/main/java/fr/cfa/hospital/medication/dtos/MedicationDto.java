@@ -3,7 +3,7 @@ package fr.cfa.hospital.medication.dtos;
 import java.util.Objects;
 
 public class MedicationDto {
-    private long id;
+    private String id;
 
     private int version;
 
@@ -12,17 +12,17 @@ public class MedicationDto {
     public MedicationDto() {
     }
 
-    public MedicationDto(long id, int version, String label) {
+    public MedicationDto(String id, int version, String label) {
         this.id = id;
         this.version = version;
         this.label = label;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -46,7 +46,7 @@ public class MedicationDto {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         MedicationDto that = (MedicationDto) object;
-        return id == that.id && version == that.version && Objects.equals(label, that.label);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

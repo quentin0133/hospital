@@ -18,9 +18,13 @@ public interface DoctorService {
 
     DoctorDto update(DoctorPostDto dto);
 
-    void deleteById(long id);
+    void deleteById(String id);
 
-    DoctorDto findById(long id);
+    DoctorDto findById(String id);
 
     Page<DoctorDto> findByNameContains(String name, Pageable pageable);
+
+    void linkUser(String idDoctor, String id);
+
+    void unlinkUser(String idDoctor);
 }

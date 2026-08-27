@@ -12,10 +12,9 @@ http:
     type: json
     data: |-
       {
-        "id": 0,
-        "version": 0,
-        "label": "",
-        "idsConsultations": []
+        "id": "6a8f059b903bb0625fcf3991",
+        "version": 1,
+        "label": "Xanax"
       }
   auth: inherit
 

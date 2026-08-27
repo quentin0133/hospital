@@ -6,7 +6,7 @@ Ce projet est une application de gestion hospitalière développée pour gérer 
 
 - Langage : Java 21
 - Back-end : Spring boot 3.4.5
-- Base de données : MariaDB (SQL)
+- Base de données : MongoDB (SQL)
 - ORM : JPA Hibernate
 - Dépendance : Spring Web, Spring Security, Spring Data JPA, Mapstruct, JWT, Swagger UI,
 - Gestionnaire de dépendance : Maven
@@ -46,12 +46,10 @@ L'application est structurée pour gérer les processus d'un établissement de s
 
 ### Prérequis
 - Java 21
-- MariaDB
-- Maven
+- Docker
 
 ### Optionnelle :
 - Bruno
-- Docker
 
 ### Étapes d'installation
 
@@ -140,7 +138,10 @@ app.default.password=test
 file.storage.path=files-test
 ```
 
-4. **Créer les bases de données (par défaut : hospital et hospital_test)**
+4. **Lancer la base de donnée :**
+```cmd
+docker run -d -p 27017:27017 --name mongodb mongo:latest
+```
 
 Vous devriez pouvoir lancer l'application et ses tests.
 

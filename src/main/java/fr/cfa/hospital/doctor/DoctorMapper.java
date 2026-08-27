@@ -11,5 +11,6 @@ import org.mapstruct.MappingConstants;
 public interface DoctorMapper extends GenericMapper<Doctor, DoctorDto, DoctorPostDto> {
     @Override
     @Mapping(target = "consultations", ignore = true)
+    @Mapping(target = "idUser", ignore = true)
     Doctor toEntity(DoctorPostDto dto);
 }

@@ -1,29 +1,34 @@
 package fr.cfa.hospital.doctor.dtos;
 
+import java.util.Objects;
+
 /**
- * The type Doctor light dto.
+ * The type Doctor dto.
  */
 public class DoctorDto {
-    private long id;
+    private String id;
 
     private int version;
 
     private String name;
 
+    private String idUser;
+
     public DoctorDto() {
     }
 
-    public DoctorDto(long id, int version, String name) {
+    public DoctorDto(String id, int version, String name, String idUser) {
         this.id = id;
         this.version = version;
         this.name = name;
+        this.idUser = idUser;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -43,12 +48,20 @@ public class DoctorDto {
         this.name = name;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         DoctorDto doctorDto = (DoctorDto) object;
-        return id == doctorDto.id;
+        return id != null && Objects.equals(id, doctorDto.id);
     }
 
     @Override
@@ -59,9 +72,10 @@ public class DoctorDto {
     @Override
     public String toString() {
         return "DoctorDto{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", version=" + version +
                 ", name='" + name + '\'' +
+                ", idUser='" + idUser + '\'' +
                 '}';
     }
 }

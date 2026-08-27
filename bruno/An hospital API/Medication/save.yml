@@ -12,9 +12,7 @@ http:
     type: json
     data: |-
       {
-        "label": "Paracétamol",
-        "idsConsultations": [1],
-        "quantity": 2
+        "label": "Paracétamol"
       }
   auth: inherit
 

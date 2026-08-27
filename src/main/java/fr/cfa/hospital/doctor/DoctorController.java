@@ -34,7 +34,7 @@ public interface DoctorController {
             @ApiResponse(responseCode = "404", description = "Doctor not found")
     })
     ResponseEntity<DoctorDto> findById(
-            @PathVariable @Parameter(description = "Doctor ID", required = true) long id
+            @PathVariable @Parameter(description = "Doctor ID", required = true) String id
     );
 
     @Operation(summary = "Find doctors by name", description = "Retrieves a paginated list of doctors matching the given name.")
@@ -71,6 +71,6 @@ public interface DoctorController {
             @ApiResponse(responseCode = "404", description = "Doctor not found")
     })
     ResponseEntity<Void> deleteById(
-            @PathVariable @Parameter(description = "Doctor ID", required = true) long id
+            @PathVariable @Parameter(description = "Doctor ID", required = true) String id
     ) throws ResourceNotFoundException;
 }

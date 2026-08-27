@@ -10,7 +10,7 @@ http:
   url: "{{baseUrl}}/api/medication/id/:id"
   params:
     - name: id
-      value: ""
+      value: 6a8f059b903bb0625fcf3991
       type: path
   auth: inherit
 

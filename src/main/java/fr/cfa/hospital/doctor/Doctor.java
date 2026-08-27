@@ -1,46 +1,48 @@
 package fr.cfa.hospital.doctor;
 
 import fr.cfa.hospital.consultation.Consultation;
-import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "doctor")
+@Document("doctor")
 public class Doctor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "serial_id")
-    private Long id;
+    private String id;
 
     @Version
-    @ColumnDefault("0")
     private int version;
 
-    @Column(name = "name")
+    @Field(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "doctor")
+    @DocumentReference
     private List<Consultation> consultations;
+
+    private String idUser;
 
     public Doctor() {
         this.consultations = new ArrayList<>();
     }
 
-    public Doctor(Long id, int version, String name, List<Consultation> consultations) {
+    public Doctor(String id, int version, String name, List<Consultation> consultations, String idUser) {
         this.id = id;
         this.version = version;
         this.name = name;
         this.consultations = consultations;
+        this.idUser = idUser;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -68,6 +70,14 @@ public class Doctor {
         this.consultations = consultations;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -84,10 +94,11 @@ public class Doctor {
     @Override
     public String toString() {
         return "Doctor{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", version=" + version +
                 ", name='" + name + '\'' +
                 ", consultations=" + consultations +
+                ", idUser='" + idUser + '\'' +
                 '}';
     }
 }

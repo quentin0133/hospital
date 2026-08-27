@@ -2,6 +2,7 @@ package fr.cfa.hospital.auth;
 
 import fr.cfa.hospital.auth.dtos.LoginDto;
 import fr.cfa.hospital.auth.dtos.LoginPostDto;
+import fr.cfa.hospital.auth.user.dtos.ChangePasswordDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,5 +34,25 @@ public interface AuthController {
     })
     ResponseEntity<LoginDto> authenticate(
             @RequestBody @Parameter(description = "User credentials (username and password)", required = true) LoginPostDto login
+    );
+
+    /**
+     * Change user password.
+     *
+     * @param changePasswordDto the data containing the user ID, old password, and new password
+     * @return the response entity with a success message
+     */
+    @Operation(
+            summary = "Change user password",
+            description = "Allows an authenticated user to change their password by verifying their current password."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password successfully updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid request payload"),
+            @ApiResponse(responseCode = "401", description = "Incorrect current password"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    ResponseEntity<String> changePassword(
+            @RequestBody @Parameter(description = "Data required to change the password (current and new password)", required = true) ChangePasswordDto changePasswordDto
     );
 }

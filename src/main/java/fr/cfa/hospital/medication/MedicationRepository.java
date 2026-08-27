@@ -1,6 +1,6 @@
 package fr.cfa.hospital.medication;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface MedicationRepository extends JpaRepository<Medication, Long> {
+public interface MedicationRepository extends MongoRepository<Medication, String> {
 }

@@ -35,6 +35,7 @@ build/
 **/src/main/resources/application-*.properties
 /files/
 /logs/
+sonar-project.properties
 
 ### Bruno ###
 .bruno/

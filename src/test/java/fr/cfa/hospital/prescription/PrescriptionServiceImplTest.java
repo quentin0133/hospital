@@ -4,7 +4,6 @@ import fr.cfa.hospital.consultation.Consultation;
 import fr.cfa.hospital.core.exception.NotProvidedUpdateIdException;
 import fr.cfa.hospital.medication.Medication;
 import fr.cfa.hospital.prescription.dtos.PrescriptionDto;
-import fr.cfa.hospital.prescription.dtos.PrescriptionPostDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

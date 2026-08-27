@@ -8,7 +8,5 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AuthMapper {
-    @Mapping(target = "user", source = "userDto")
-    @Mapping(target = "token", source = "token")
-    LoginDto toLoginResponse(UserDto userDto, String token);
+    LoginDto toLoginResponse(UserDto user, String token);
 }

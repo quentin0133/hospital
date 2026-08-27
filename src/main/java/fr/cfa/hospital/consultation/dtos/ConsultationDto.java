@@ -2,15 +2,15 @@ package fr.cfa.hospital.consultation.dtos;
 
 import fr.cfa.hospital.doctor.dtos.DoctorDto;
 import fr.cfa.hospital.file.dtos.FileDto;
-import fr.cfa.hospital.medication.dtos.MedicationDto;
 import fr.cfa.hospital.patient.dtos.PatientDto;
+import fr.cfa.hospital.prescription.dtos.PrescriptionDto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultationDto {
-    private long id;
+    private String id;
 
     private int version;
 
@@ -18,31 +18,31 @@ public class ConsultationDto {
 
     private PatientDto patient;
 
-    private List<MedicationDto> medications;
+    private List<PrescriptionDto> prescriptions;
 
     private LocalDate date;
 
     private FileDto file;
 
     public ConsultationDto() {
-        medications = new ArrayList<>();
+        prescriptions = new ArrayList<>();
     }
 
-    public ConsultationDto(long id, int version, LocalDate date, PatientDto patient, DoctorDto doctor, List<MedicationDto> medications, FileDto file) {
+    public ConsultationDto(String id, int version, LocalDate date, PatientDto patient, DoctorDto doctor, List<PrescriptionDto> prescriptions, FileDto file) {
         this.id = id;
         this.version = version;
         this.doctor = doctor;
         this.patient = patient;
-        this.medications = medications;
+        this.prescriptions = prescriptions;
         this.date = date;
         this.file = file;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -70,12 +70,12 @@ public class ConsultationDto {
         this.patient = patient;
     }
 
-    public List<MedicationDto> getMedications() {
-        return medications;
+    public List<PrescriptionDto> getPrescriptions() {
+        return prescriptions;
     }
 
-    public void setMedications(List<MedicationDto> medications) {
-        this.medications = medications;
+    public void setPrescriptions(List<PrescriptionDto> prescriptions) {
+        this.prescriptions = prescriptions;
     }
 
     public LocalDate getDate() {
@@ -113,7 +113,7 @@ public class ConsultationDto {
                 ", version=" + version +
                 ", doctor=" + doctor +
                 ", patient=" + patient +
-                ", medications=" + medications +
+                ", prescriptions=" + prescriptions +
                 ", date=" + date +
                 ", file=" + file +
                 '}';

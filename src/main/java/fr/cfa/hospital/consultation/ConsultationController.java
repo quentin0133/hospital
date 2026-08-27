@@ -7,15 +7,19 @@ import fr.cfa.hospital.file.dtos.FileDto;
 import fr.cfa.hospital.file.dtos.FilePostDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
@@ -37,7 +41,7 @@ public interface ConsultationController {
             @ApiResponse(responseCode = "404", description = "Consultation not found")
     })
     ResponseEntity<ConsultationDto> findById(
-            @PathVariable @Parameter(description = "Consultation ID", required = true) long id
+            @PathVariable @Parameter(description = "Consultation ID", required = true) String id
     );
 
     @Operation(summary = "Get consultations by patient", description = "Retrieves a paginated list of consultations for a specific patient.")
@@ -45,7 +49,7 @@ public interface ConsultationController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     })
     ResponseEntity<Page<ConsultationDto>> findByPatientId(
-            @PathVariable @Parameter(description = "Patient ID", required = true) long id,
+            @PathVariable @Parameter(description = "Patient ID", required = true) String id,
             @Parameter(description = "Pagination parameters") Pageable pageable
     );
 
@@ -84,6 +88,44 @@ public interface ConsultationController {
             @ApiResponse(responseCode = "404", description = "Consultation not found")
     })
     ResponseEntity<Void> deleteById(
-            @PathVariable @Parameter(description = "Consultation ID", required = true) long id
+            @PathVariable @Parameter(description = "Consultation ID", required = true) String id
+    ) throws ResourceNotFoundException;
+
+    @Operation(
+            summary = "Add a prescription",
+            description = "Adds a medication with a specific quantity to a consultation's list of prescriptions."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Prescription successfully added",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ConsultationDto.class))),
+            @ApiResponse(responseCode = "404", description = "Consultation or Medication not found", content = @Content)
+    })
+    ResponseEntity<ConsultationDto> addPrescription(
+            @Parameter(description = "The ID of the consultation", example = "6a8f059b903bb0625fcf3991")
+            @PathVariable String idConsultation,
+
+            @Parameter(description = "The ID of the medication to prescribe", example = "6a8f059b903bb0625fcf3992")
+            @PathVariable String idMedication,
+
+            @Parameter(description = "The prescribed quantity", example = "2")
+            @RequestParam int quantity
+    ) throws ResourceNotFoundException;
+
+
+    @Operation(
+            summary = "Remove a prescription",
+            description = "Removes a specific medication from the prescriptions of an existing consultation."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Prescription successfully removed",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ConsultationDto.class))),
+            @ApiResponse(responseCode = "404", description = "Consultation not found, or Medication not present in this consultation", content = @Content)
+    })
+    ResponseEntity<ConsultationDto> removePrescription(
+            @Parameter(description = "The ID of the consultation", example = "6a8f059b903bb0625fcf3991")
+            @PathVariable String idConsultation,
+
+            @Parameter(description = "The ID of the medication to remove", example = "6a8f059b903bb0625fcf3992")
+            @PathVariable String idMedication
     ) throws ResourceNotFoundException;
 }

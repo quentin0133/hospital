@@ -43,7 +43,7 @@ public interface PatientController {
             @ApiResponse(responseCode = "404", description = "Patient not found")
     })
     ResponseEntity<PatientDto> findById(
-            @PathVariable @Parameter(description = "Patient ID", required = true) long id
+            @PathVariable @Parameter(description = "Patient ID", required = true) String id
     );
 
     @Operation(summary = "Create a patient", description = "Creates a new patient in the system.")
@@ -71,6 +71,6 @@ public interface PatientController {
             @ApiResponse(responseCode = "404", description = "Patient not found")
     })
     ResponseEntity<Void> deleteById(
-            @PathVariable @Parameter(description = "Patient ID", required = true) long id
+            @PathVariable @Parameter(description = "Patient ID", required = true) String id
     ) throws ResourceNotFoundException;
 }

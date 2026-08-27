@@ -16,11 +16,15 @@ public interface ConsultationService {
 
     ConsultationDto update(ConsultationPostDto dto);
 
-    void deleteById(long id);
+    void deleteById(String id);
 
-    ConsultationDto findById(long id);
+    ConsultationDto findById(String id);
 
-    Page<ConsultationDto> findByPatientId(long patientId, Pageable pageable);
+    Page<ConsultationDto> findByPatientId(String patientId, Pageable pageable);
 
     FileDto uploadFiles(FilePostDto dto) throws IOException;
+
+    ConsultationDto addPrescription(String idConsultation, String idMedication, int quantity);
+
+    ConsultationDto removePrescription(String idConsultation, String idMedication);
 }

@@ -7,7 +7,7 @@ config:
     inherit: true
     config:
       protocol: http
-      hostname: "localhost"
+      hostname: localhost
       port: "8080"
       auth:
         username: ""
@@ -31,5 +31,7 @@ extensions:
     openapi:
       - sourceUrl: http://localhost:8080/v3/api-docs
         groupBy: tags
+        lastSyncDate: 2026-08-26T16:01:20.321Z
+        specHash: 92a81c52b7d34ffb121570ea2a85e380
         autoCheck: true
         autoCheckInterval: 5

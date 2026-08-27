@@ -12,8 +12,8 @@ http:
     type: json
     data: |-
       {
-        "id": 1,
-        "version": 0,
+        "id": "6a8f080c903bb0625fcf3992",
+        "version": 1,
         "name": "Véronique DUKE"
       }
   auth: inherit

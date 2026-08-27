@@ -4,20 +4,20 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class ConsultationPostDto {
-    private Long id;
+    private String id;
 
     private int version;
 
     private LocalDate date;
 
-    private long doctorId;
+    private String doctorId;
 
-    private long patientId;
+    private String patientId;
 
     public ConsultationPostDto() {
     }
 
-    public ConsultationPostDto(Long id, int version, LocalDate date, long doctorId, long patientId) {
+    public ConsultationPostDto(String id, int version, LocalDate date, String doctorId, String patientId) {
         this.id = id;
         this.version = version;
         this.date = date;
@@ -25,11 +25,11 @@ public class ConsultationPostDto {
         this.patientId = patientId;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -49,19 +49,19 @@ public class ConsultationPostDto {
         this.date = date;
     }
 
-    public long getDoctorId() {
+    public String getDoctorId() {
         return doctorId;
     }
 
-    public void setDoctorId(long doctor) {
+    public void setDoctorId(String doctor) {
         this.doctorId = doctor;
     }
 
-    public long getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(long patient) {
+    public void setPatientId(String patient) {
         this.patientId = patient;
     }
 
@@ -69,7 +69,7 @@ public class ConsultationPostDto {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         ConsultationPostDto that = (ConsultationPostDto) object;
-        return Objects.equals(id, that.id) && version == that.version && doctorId == that.doctorId && patientId == that.patientId && Objects.equals(date, that.date);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

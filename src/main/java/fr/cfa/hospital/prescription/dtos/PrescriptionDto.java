@@ -1,60 +1,31 @@
 package fr.cfa.hospital.prescription.dtos;
 
+import fr.cfa.hospital.medication.dtos.MedicationDto;
+
+import java.util.Objects;
+
 /**
- * The type Prescription light dto.
+ * The type Prescription dto.
  */
 public class PrescriptionDto {
-    private long id;
-
-    private int version;
-
-    private long medicationId;
-
-    private long consultationId;
+    private MedicationDto medication;
 
     private int quantity;
 
     public PrescriptionDto() {
     }
 
-    public PrescriptionDto(long id, int version, long medicationId, long consultationId, int quantity) {
-        this.id = id;
-        this.version = version;
-        this.medicationId = medicationId;
-        this.consultationId = consultationId;
+    public PrescriptionDto(MedicationDto medication, int quantity) {
+        this.medication = medication;
         this.quantity = quantity;
     }
 
-    public long getId() {
-        return id;
+    public MedicationDto getMedication() {
+        return medication;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public long getMedicationId() {
-        return medicationId;
-    }
-
-    public void setMedicationId(long medicationId) {
-        this.medicationId = medicationId;
-    }
-
-    public long getConsultationId() {
-        return consultationId;
-    }
-
-    public void setConsultationId(long consultationId) {
-        this.consultationId = consultationId;
+    public void setMedication(MedicationDto medication) {
+        this.medication = medication;
     }
 
     public int getQuantity() {
@@ -67,10 +38,9 @@ public class PrescriptionDto {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         PrescriptionDto that = (PrescriptionDto) object;
-        return id == that.id;
+        return quantity == that.quantity && Objects.equals(medication, that.medication);
     }
 
     @Override
@@ -81,10 +51,7 @@ public class PrescriptionDto {
     @Override
     public String toString() {
         return "PrescriptionDto{" +
-                "id=" + id +
-                ", version=" + version +
-                ", medicationId=" + medicationId +
-                ", consultationId=" + consultationId +
+                "medication=" + medication +
                 ", quantity=" + quantity +
                 '}';
     }

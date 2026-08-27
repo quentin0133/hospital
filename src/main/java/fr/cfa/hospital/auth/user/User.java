@@ -1,34 +1,42 @@
 package fr.cfa.hospital.auth.user;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "users")
+@Document("users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Field(name = "username")
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Field(name = "password")
     private String password;
+
+    @Field(name = "role")
+    private String role;
+
+    @Field(name = "must_change_password")
+    private boolean mustChangePassword;
 
     public User() {
     }
 
-    public User(Long id, String username, String password) {
+    public User(String id, String username, String password, String role, boolean mustChangePassword) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.role = role;
+        this.mustChangePassword = mustChangePassword;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -48,6 +56,22 @@ public class User {
         this.password = password;
     }
 
+    public boolean isMustChangePassword() {
+        return mustChangePassword;
+    }
+
+    public void setMustChangePassword(boolean mustChangePassword) {
+        this.mustChangePassword = mustChangePassword;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,8 +88,11 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", mustChangePassword=" + mustChangePassword +
                 '}';
     }
 }

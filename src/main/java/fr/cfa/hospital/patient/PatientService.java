@@ -1,5 +1,7 @@
 package fr.cfa.hospital.patient;
 
+import fr.cfa.hospital.core.exception.AccountExistsException;
+import fr.cfa.hospital.core.exception.AccountNotFoundException;
 import fr.cfa.hospital.patient.dtos.PatientDto;
 import fr.cfa.hospital.patient.dtos.PatientPostDto;
 import org.springframework.data.domain.Page;
@@ -10,11 +12,15 @@ public interface PatientService {
 
     Page<PatientDto> findByName(String name, Pageable pageable);
 
-    PatientDto findById(long id);
+    PatientDto findById(String id);
 
     PatientDto save(PatientPostDto dto);
 
     PatientDto update(PatientPostDto dto);
 
-    void deleteById(long id);
+    void deleteById(String id);
+
+    void linkUser(String idPatient, String idUser) throws AccountExistsException;
+
+    void unlinkUser(String idPatient) throws AccountNotFoundException;
 }

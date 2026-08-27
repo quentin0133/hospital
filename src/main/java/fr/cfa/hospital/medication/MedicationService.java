@@ -9,11 +9,11 @@ import java.util.List;
 public interface MedicationService {
     List<MedicationDto> findAll(Pageable pageable);
 
-    MedicationDto findById(long id);
+    MedicationDto findById(String id);
 
     MedicationDto save(MedicationPostDto dto);
 
     MedicationDto update(MedicationPostDto dto);
 
-    void deleteById(long id);
+    void deleteById(String id);
 }

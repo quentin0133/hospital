@@ -3,7 +3,7 @@ package fr.cfa.hospital.doctor.dtos;
 import java.util.Objects;
 
 public class DoctorPostDto {
-    private Long id;
+    private String id;
 
     private int version;
 
@@ -11,17 +11,17 @@ public class DoctorPostDto {
 
     public DoctorPostDto() {}
 
-    public DoctorPostDto(Long id, int version, String name) {
+    public DoctorPostDto(String id, int version, String name) {
         this.id = id;
         this.version = version;
         this.name = name;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

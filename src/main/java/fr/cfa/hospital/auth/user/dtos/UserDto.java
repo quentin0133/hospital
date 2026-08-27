@@ -1,23 +1,28 @@
 package fr.cfa.hospital.auth.user.dtos;
 
+import java.util.Objects;
+
 public class UserDto {
-    private long id;
+    private String id;
 
     private String username;
+
+    private String role;
 
     public UserDto() {
     }
 
-    public UserDto(long id, String username) {
+    public UserDto(String id, String username, String role) {
         this.id = id;
         this.username = username;
+        this.role = role;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -29,11 +34,19 @@ public class UserDto {
         this.username = username;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return id == userDto.id;
+        return id != null && Objects.equals(id, userDto.id);
     }
 
     @Override
@@ -44,8 +57,9 @@ public class UserDto {
     @Override
     public String toString() {
         return "UserDto{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", username='" + username + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

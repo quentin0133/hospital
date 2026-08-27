@@ -38,6 +38,7 @@ public class SecurityConfig {
         "/swagger-ui/**"
     };
 
+    // Public request for specific method
     private static final Map<HttpMethod, String[]> AUTHORIZED_URLS_BY_METHOD = Map.of(
         HttpMethod.GET, new String[]{},
         HttpMethod.POST, new String[]{},
@@ -45,8 +46,6 @@ public class SecurityConfig {
     );
 
     private static final int EXPIRATION_TIME_SECONDS = 60 * 60; // unit : second => 1 hour
-
-    private static String secretKey;
 
     private final JwtAuthFilter jwtAuthFilter;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
@@ -56,11 +55,6 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
         this.exceptionHandlerFilter = exceptionHandlerFilter;
         this.userDetailsService = userDetailsService;
-    }
-
-    @Value("${jwt.secret.key}")
-    public static void setSecretKey(String newSecretKey) {
-        secretKey = newSecretKey;
     }
 
     @Bean

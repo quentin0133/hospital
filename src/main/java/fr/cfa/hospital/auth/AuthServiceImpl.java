@@ -6,7 +6,6 @@ import fr.cfa.hospital.auth.user.UserMapper;
 import fr.cfa.hospital.auth.user.UserSecurity;
 import fr.cfa.hospital.auth.user.dtos.UserDto;
 import fr.cfa.hospital.core.tools.JwtUtils;
-import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +14,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;

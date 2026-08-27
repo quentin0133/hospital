@@ -1,18 +1,10 @@
 package fr.cfa.hospital.file;
 
-import jakarta.persistence.*;
+import java.util.Objects;
 
-@Entity
-@Table(name = "files")
 public class File {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "file_name")
     private String fileName;
 
-    @Column(name = "stored_file_name", unique = true)
     private String storedFileName;
 
     public File() {
@@ -21,14 +13,6 @@ public class File {
     public File(String fileName, String storedFileName) {
         this.fileName = fileName;
         this.storedFileName = storedFileName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFileName() {
@@ -49,10 +33,9 @@ public class File {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        File that = (File) object;
-        return id != null && id.equals(that.getId());
+        File file = (File) object;
+        return Objects.equals(fileName, file.fileName) && Objects.equals(storedFileName, file.storedFileName);
     }
 
     @Override
@@ -63,8 +46,7 @@ public class File {
     @Override
     public String toString() {
         return "File{" +
-                "id=" + id +
-                ", fileName='" + fileName + '\'' +
+                "fileName='" + fileName + '\'' +
                 ", storedFileName='" + storedFileName + '\'' +
                 '}';
     }

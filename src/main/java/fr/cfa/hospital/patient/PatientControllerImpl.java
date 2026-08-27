@@ -36,7 +36,7 @@ public class PatientControllerImpl implements PatientController {
     @Override
     @LogController
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PatientDto> findById(@PathVariable long id) {
+    public ResponseEntity<PatientDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -57,7 +57,7 @@ public class PatientControllerImpl implements PatientController {
     @Override
     @LogController
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable long id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> deleteById(@PathVariable String id) throws ResourceNotFoundException {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,9 +1,11 @@
 package fr.cfa.hospital.doctor;
 
+import fr.cfa.hospital.core.exception.AccountExistsException;
+import fr.cfa.hospital.core.exception.AccountNotFoundException;
 import fr.cfa.hospital.core.exception.ResourceNotFoundException;
 import fr.cfa.hospital.doctor.dtos.DoctorDto;
 import fr.cfa.hospital.doctor.dtos.DoctorPostDto;
-import jakarta.transaction.Transactional;
+import fr.cfa.hospital.patient.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Transactional
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository repository;
     private final DoctorMapper mapper;
@@ -38,27 +39,53 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorDto save(DoctorPostDto dto) {
-        return mapper.toDto(repository.saveAndFlush(mapper.toEntity(dto)));
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
     public DoctorDto update(DoctorPostDto dto) {
-        return mapper.toDto(repository.saveAndFlush(mapper.toEntity(dto)));
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         if (!repository.existsById(id)) throw new ResourceNotFoundException("Doctor", id);
         repository.deleteById(id);
     }
 
     @Override
-    public DoctorDto findById(long id) {
+    public DoctorDto findById(String id) {
         return repository.findById(id).map(mapper::toDto).orElseThrow(() -> new ResourceNotFoundException("Doctor", id));
     }
 
     @Override
     public Page<DoctorDto> findByNameContains(String name, Pageable pageable) {
         return repository.findByNameContains(name, pageable).map(mapper::toDto);
+    }
+
+    @Override
+    public void linkUser(String idDoctor, String id) {
+        Doctor doctor = repository.findById(idDoctor)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));
+
+        if (doctor.getIdUser() != null) {
+            throw new AccountExistsException();
+        }
+
+        doctor.setIdUser(idDoctor);
+        repository.save(doctor);
+    }
+
+    @Override
+    public void unlinkUser(String idDoctor) {
+        Doctor doctor = repository.findById(idDoctor)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));
+
+        if (doctor.getIdUser() == null) {
+            throw new AccountNotFoundException();
+        }
+
+        doctor.setIdUser(null);
+        repository.save(doctor);
     }
 }
