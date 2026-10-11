@@ -42,11 +42,11 @@ class DoctorServiceImplTest {
     void findAll() {
         List<Doctor> doctors = new ArrayList<>();
 
-        Doctor mockDoctor = new Doctor(1L, 1, "Frédéric", List.of());
-        Doctor mockDoctor2 = new Doctor(2L, 1, "Michel", List.of());
+        Doctor mockDoctor = new Doctor("1", 1, "Frédéric", List.of(), null);
+        Doctor mockDoctor2 = new Doctor("2", 1, "Michel", List.of(), null);
 
-        DoctorDto expected1 = new DoctorDto(1L, 0, "Frédéric");
-        DoctorDto expected2 = new DoctorDto(2L, 0, "Michel");
+        DoctorDto expected1 = new DoctorDto("1", 0, "Frédéric", null);
+        DoctorDto expected2 = new DoctorDto("2", 0, "Michel", null);
 
         doctors.add(mockDoctor);
         doctors.add(mockDoctor2);
@@ -71,11 +71,11 @@ class DoctorServiceImplTest {
     void findByNameContains() {
         List<Doctor> doctors = new ArrayList<>();
 
-        Doctor mockDoctor = new Doctor(1L, 1, "Frédéric", List.of());
-        Doctor mockDoctor2 = new Doctor(2L, 1, "Michel", List.of());
+        Doctor mockDoctor = new Doctor("1", 1, "Frédéric", List.of(), null);
+        Doctor mockDoctor2 = new Doctor("2", 1, "Michel", List.of(), null);
 
-        DoctorDto expected1 = new DoctorDto(1L, 0, "Frédéric");
-        DoctorDto expected2 = new DoctorDto(2L, 0, "Michel");
+        DoctorDto expected1 = new DoctorDto("1", 0, "Frédéric", null);
+        DoctorDto expected2 = new DoctorDto("2", 0, "Michel", null);
 
         doctors.add(mockDoctor);
         doctors.add(mockDoctor2);
@@ -100,30 +100,30 @@ class DoctorServiceImplTest {
 
     @Test
     void findById() {
-        Doctor mockDoctor = new Doctor(1L, 1, "Frédéric", List.of());
-        DoctorDto expected = new DoctorDto(1L, 0, "Frédéric");
-        int id = 1;
+        Doctor mockDoctor = new Doctor("1", 1, "Frédéric", List.of(), null);
+        DoctorDto expected = new DoctorDto("1", 0, "Frédéric", null);
+        String id = "1";
 
-        when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(mockDoctor));
+        when(doctorRepository.findById(anyString())).thenReturn(Optional.of(mockDoctor));
         when(doctorMapper.toDto(any(Doctor.class))).thenAnswer(invocation -> toDto(invocation.getArgument(0)));
 
         DoctorDto result = doctorServiceImpl.findById(id);
 
         assertEquals(result, expected);
 
-        verify(doctorRepository).findById(anyLong());
+        verify(doctorRepository).findById(anyString());
         verify(doctorMapper).toDto(any(Doctor.class));
     }
 
     @Test
     void findById_notFound() {
-        int id = 1;
+        String id = "1";
 
-        when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(doctorRepository.findById(anyString())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> doctorServiceImpl.findById(id));
 
-        verify(doctorRepository).findById(anyLong());
+        verify(doctorRepository).findById(anyString());
         verifyNoInteractions(doctorMapper);
     }
 

@@ -8,6 +8,7 @@ import fr.cfa.hospital.prescription.dtos.PrescriptionDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ConsultationDto {
     private String id;
@@ -98,7 +99,7 @@ public class ConsultationDto {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         ConsultationDto that = (ConsultationDto) object;
-        return id == that.id;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class ConsultationDto {
     @Override
     public String toString() {
         return "ConsultationDto{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", version=" + version +
                 ", doctor=" + doctor +
                 ", patient=" + patient +

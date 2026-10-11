@@ -13,8 +13,8 @@ http:
     data: |-
       {
         "date": "2026-09-12",
-        "doctorId": "6a8f0835903bb0625fcf3993",
-        "patientId": "6a8f087b903bb0625fcf3995"
+        "doctorId": "6a917f5252c94d278e5bc2ea",
+        "patientId": "6a917f5552c94d278e5bc2eb"
       }
   auth: inherit
 

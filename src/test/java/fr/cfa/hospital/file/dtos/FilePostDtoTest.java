@@ -15,15 +15,15 @@ class FilePostDtoTest {
         FilePostDto dto = new FilePostDto();
 
         assertNotNull(dto);
-        assertEquals(0, dto.getId());
+        assertNull(dto.getIdConsultation());
         assertNull(dto.getFile());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        FilePostDto dto = new FilePostDto(1, null);
+        FilePostDto dto = new FilePostDto("1", null);
 
-        assertEquals(1, dto.getId());
+        assertEquals("1", dto.getIdConsultation());
         assertNull(dto.getFile());
     }
 
@@ -38,12 +38,12 @@ class FilePostDtoTest {
     }
 
     @Test
-    void testEquals_shouldNotBeEqualsWhenDifferentId() {
+    void testEquals_shouldNotBeEqualsWhenDifferentIdConsultation() {
         FilePostDto f1 = new FilePostDto();
-        f1.setId(1);
+        f1.setIdConsultation("1");
 
         FilePostDto f2 = new FilePostDto();
-        f2.setId(2);
+        f2.setIdConsultation("2");
 
         assertNotEquals(f1, f2);
     }
@@ -51,11 +51,11 @@ class FilePostDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         FilePostDto f1 = new FilePostDto();
-        f1.setId(1);
+        f1.setIdConsultation("1");
         f1.setFile(null);
 
         FilePostDto f2 = new FilePostDto();
-        f2.setId(1);
+        f2.setIdConsultation("1");
         f2.setFile(null);
 
         assertEquals(f1, f2);
@@ -64,11 +64,11 @@ class FilePostDtoTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         FilePostDto f1 = new FilePostDto();
-        f1.setId(1);
+        f1.setIdConsultation("1");
         f1.setFile(null);
 
         FilePostDto f2 = new FilePostDto();
-        f2.setId(1);
+        f2.setIdConsultation("1");
         f2.setFile(null);
 
         assertEquals(f1.hashCode(), f2.hashCode());
@@ -77,11 +77,11 @@ class FilePostDtoTest {
     @Test
     void testToString() {
         FilePostDto original = new FilePostDto();
-        original.setId(1);
+        original.setIdConsultation("1");
         original.setFile(null);
 
         String expected = "FilePostDto{" +
-                "id=" + original.getId() +
+                "idConsultation=" + original.getIdConsultation() +
                 ", multipartFile=" + original.getFile() +
                 '}';
         assertEquals(expected, original.toString());

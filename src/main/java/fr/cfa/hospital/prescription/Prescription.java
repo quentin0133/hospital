@@ -3,6 +3,8 @@ package fr.cfa.hospital.prescription;
 import fr.cfa.hospital.medication.Medication;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.Objects;
+
 /**
  * The type Prescription.
  */
@@ -40,7 +42,7 @@ public class Prescription {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         Prescription that = (Prescription) object;
-        return quantity == that.quantity;
+        return quantity == that.quantity && Objects.equals(medication, that.medication);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class Prescription {
     @Override
     public String toString() {
         return "Prescription{" +
-                ", medication=" + medication +
+                "medication=" + medication +
                 ", quantity=" + quantity +
                 '}';
     }

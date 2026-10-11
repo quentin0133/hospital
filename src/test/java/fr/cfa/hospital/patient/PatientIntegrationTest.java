@@ -1,11 +1,12 @@
 package fr.cfa.hospital.patient;
 
 import fr.cfa.hospital.HospitalApplication;
-import fr.cfa.hospital.auth.user.User;
+import fr.cfa.hospital.auth.user.UserRepository;
 import fr.cfa.hospital.auth.user.UserSecurity;
+import fr.cfa.hospital.consultation.ConsultationRepository;
 import fr.cfa.hospital.core.tools.JwtUtils;
 import fr.cfa.hospital.patient.dtos.PatientDto;
-import jakarta.transaction.Transactional;
+import fr.cfa.hospital.utils.MongoTestSeeder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +23,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class PatientIntegrationTest {
+    @Autowired
+    private MongoTestSeeder mongoTestSeeder;
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ConsultationRepository csqdf;
+
     private String jwtToken;
 
     @BeforeEach
     void setup() {
-        UserDetails user = new UserSecurity(new User(1L, "test", "test"));
+        mongoTestSeeder.resetAndSeedDatabase();
+        System.out.println(csqdf.findAll());
+        UserDetails user = new UserSecurity(userRepository.findById("user-1").orElseThrow());
         jwtToken = jwtUtils.generateToken(user);
     }
 
@@ -108,13 +119,13 @@ class PatientIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalElements").value(0));
+            .andExpect(jsonPath("$.page.totalElements").value(0));
     }
 
     @Test
     void findById() throws Exception {
         int id = 1;
-        PatientDto expected = new PatientDto(1L, 0, "Michel DUBOIS");
+        PatientDto expected = new PatientDto("1", 0, "Michel DUBOIS", null);
 
         mockMvc.perform(
                 get("/api/patient/id/{id}", id)

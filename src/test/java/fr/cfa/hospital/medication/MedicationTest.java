@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
@@ -28,24 +26,21 @@ class MedicationTest {
         assertNotNull(entity);
         assertNull(entity.getId());
         assertNull(entity.getLabel());
-        assertEquals(new ArrayList<>(), entity.getPrescriptions());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        Medication dto = new Medication(1L, "paracetamol", new ArrayList<>());
+        Medication dto = new Medication("1", "paracetamol");
 
-        assertEquals(1, dto.getId());
+        assertEquals("1", dto.getId());
         assertEquals("paracetamol", dto.getLabel());
-        assertEquals(new ArrayList<>(), dto.getPrescriptions());
     }
 
     @Test
     void testJacksonSerialization_validInput() throws Exception {
         Medication original = new Medication();
-        original.setId(1L);
+        original.setId("1");
         original.setLabel("paracetamol");
-        original.setPrescriptions(new ArrayList<>());
 
         String json = objectMapper.writeValueAsString(original);
         Medication result = objectMapper.readValue(json, Medication.class);
@@ -72,10 +67,10 @@ class MedicationTest {
     @Test
     void testEquals_shouldNotBeEqualsWhenDifferentId() {
         Medication m1 = new Medication();
-        m1.setId(1L);
+        m1.setId("1");
 
         Medication m2 = new Medication();
-        m2.setId(2L);
+        m2.setId("2");
 
         assertNotEquals(m1, m2);
     }
@@ -92,27 +87,14 @@ class MedicationTest {
     }
 
     @Test
-    void testEquals_differentPrescriptions() {
-        Medication m1 = new Medication();
-        m1.setPrescriptions(new ArrayList<>());
-
-        Medication m2 = new Medication();
-        m2.setPrescriptions(null);
-
-        assertNotEquals(m1, m2);
-    }
-
-    @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         Medication m1 = new Medication();
-        m1.setId(1L);
+        m1.setId("1");
         m1.setLabel("paracetamol");
-        m1.setPrescriptions(new ArrayList<>());
 
         Medication m2 = new Medication();
-        m2.setId(1L);
+        m2.setId("1");
         m2.setLabel("paracetamol");
-        m2.setPrescriptions(new ArrayList<>());
 
         assertEquals(m1, m2);
     }
@@ -120,14 +102,12 @@ class MedicationTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         Medication m1 = new Medication();
-        m1.setId(1L);
+        m1.setId("1");
         m1.setLabel("paracetamol");
-        m1.setPrescriptions(new ArrayList<>());
 
         Medication m2 = new Medication();
-        m2.setId(1L);
+        m2.setId("1");
         m2.setLabel("paracetamol");
-        m2.setPrescriptions(new ArrayList<>());
 
         assertEquals(m1.hashCode(), m2.hashCode());
     }
@@ -135,15 +115,13 @@ class MedicationTest {
     @Test
     void testToString() {
         Medication original = new Medication();
-        original.setId(1L);
+        original.setId("1");
         original.setLabel("paracetamol");
-        original.setPrescriptions(new ArrayList<>());
 
         String expected = "Medication{" +
                 "id=" + original.getId() +
                 ", version=" + original.getVersion() +
                 ", label='" + original.getLabel() + '\'' +
-                ", prescriptions=" + original.getPrescriptions() +
                 '}';
         assertEquals(expected, original.toString());
     }

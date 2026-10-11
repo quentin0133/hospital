@@ -5,24 +5,24 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 
 public class FilePostDto {
-    private String id;
+    private String idConsultation;
 
     private MultipartFile file;
 
     public FilePostDto() {
     }
 
-    public FilePostDto(String id, MultipartFile file) {
-        this.id = id;
+    public FilePostDto(String idConsultation, MultipartFile file) {
+        this.idConsultation = idConsultation;
         this.file = file;
     }
 
-    public String getId() {
-        return id;
+    public String getIdConsultation() {
+        return idConsultation;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdConsultation(String idConsultation) {
+        this.idConsultation = idConsultation;
     }
 
     public MultipartFile getFile() {
@@ -37,7 +37,7 @@ public class FilePostDto {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         FilePostDto that = (FilePostDto) object;
-        return id != null && Objects.equals(id, that.id);
+        return idConsultation != null && Objects.equals(idConsultation, that.idConsultation);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FilePostDto {
     @Override
     public String toString() {
         return "FilePostDto{" +
-                "id=" + id +
+                "idConsultation=" + idConsultation +
                 ", multipartFile=" + file +
                 '}';
     }

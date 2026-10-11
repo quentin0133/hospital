@@ -44,6 +44,7 @@ public class Consultation {
         this.prescriptions = prescriptions;
         this.doctor = doctor;
         this.patient = patient;
+        this.file = file;
     }
 
     public String getId() {

@@ -1,6 +1,5 @@
 package fr.cfa.hospital.auth.user.account.management;
 
-import fr.cfa.hospital.auth.user.User;
 import fr.cfa.hospital.auth.user.UserSecurity;
 import fr.cfa.hospital.auth.user.UserService;
 import fr.cfa.hospital.auth.user.dtos.ChangePasswordDto;

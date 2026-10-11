@@ -1,5 +1,7 @@
 package fr.cfa.hospital.medication;
 
+import fr.cfa.hospital.core.exception.NotProvidedUpdateIdException;
+import fr.cfa.hospital.core.exception.ProvidedSaveIdException;
 import fr.cfa.hospital.core.exception.ResourceNotFoundException;
 import fr.cfa.hospital.medication.dtos.MedicationDto;
 import fr.cfa.hospital.medication.dtos.MedicationPostDto;
@@ -30,11 +32,23 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     public MedicationDto save(MedicationPostDto dto) {
+        if (dto.getId() != null) {
+            throw new ProvidedSaveIdException();
+        }
+
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
     public MedicationDto update(MedicationPostDto dto) {
+        if (dto.getId() == null) {
+            throw new NotProvidedUpdateIdException();
+        }
+
+        if (!repository.existsById(dto.getId())) {
+            throw new ResourceNotFoundException("Medication", dto.getId());
+        }
+
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 

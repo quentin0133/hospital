@@ -49,11 +49,11 @@ class AuthServiceImplTest {
     @Test
     void authenticate_validInput() {
         Authentication authentication = Mockito.mock(Authentication.class);
-        UserSecurity userSecurity = new UserSecurity(new User(1L, "test", "test"));
-        LoginDto expected = new LoginDto(new UserDto(1, "test"), "token");
+        UserSecurity userSecurity = new UserSecurity(new User("6a8f087b903bb0625fcf3995", "test", "test", "ROLE_ADMIN", false));
+        LoginDto expected = new LoginDto(new UserDto("6a8f087b903bb0625fcf3995", "test", "ROLE_ADMIN"), "token");
 
         when(jwtUtils.generateToken(any(UserDetails.class))).thenReturn("token");
-        when(userMapper.toDto(any(User.class))).thenReturn(new UserDto(1, "test"));
+        when(userMapper.toDto(any(User.class))).thenReturn(new UserDto("6a8f087b903bb0625fcf3995", "test", "ROLE_ADMIN"));
         when(authentication.getPrincipal()).thenReturn(userSecurity);
         when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(authentication);
         when(authMapper.toLoginResponse(any(UserDto.class), anyString())).thenReturn(expected);

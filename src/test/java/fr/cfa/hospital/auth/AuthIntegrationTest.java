@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cfa.hospital.HospitalApplication;
 import fr.cfa.hospital.auth.dtos.LoginPostDto;
 import fr.cfa.hospital.auth.user.dtos.UserDto;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class AuthIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -31,7 +29,7 @@ class AuthIntegrationTest {
     @Test
     void testAuthenticate_shouldReturn200WhenGoodCredentials() throws Exception {
         LoginPostDto login = new LoginPostDto("test", "test");
-        UserDto expected = new UserDto(1, "test");
+        UserDto expected = new UserDto("user-1", "test", "ROLE_ADMIN");
 
         mockMvc.perform(
             post("/api/auth/login")
@@ -39,7 +37,7 @@ class AuthIntegrationTest {
                 .content(objectMapper.writeValueAsString(login)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.user").value(expected))
-            .andExpect(jsonPath("$.user.id").value(1))
+            .andExpect(jsonPath("$.user.id").value("user-1"))
             .andExpect(jsonPath("$.user.username").value("test"));
     }
 
@@ -53,6 +51,6 @@ class AuthIntegrationTest {
                 post("/api/auth/login")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(objectMapper.writeValueAsString(login)))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     }
 }

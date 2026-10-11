@@ -75,7 +75,7 @@ class FileUtilsTest {
     }
 
     @Test
-    void upload_fileEmpty() throws IOException {
+    void upload_fileEmpty() {
         MockMultipartFile mockFile = new MockMultipartFile(
                 "file",
                 "test-document.pdf",
@@ -87,7 +87,7 @@ class FileUtilsTest {
     }
 
     @Test
-    void upload_fileNull() throws IOException {
+    void upload_fileNull() {
         try (MockedStatic<Files> fileMocked = mockStatic(Files.class, CALLS_REAL_METHODS)) {
             assertThrows(IllegalArgumentException.class, () -> FileUtils.upload(null, "files-test"), "The file can't be empty or null");
 
@@ -112,7 +112,7 @@ class FileUtilsTest {
     }
 
     @Test
-    void delete_directoryNotExists() throws IOException {
+    void delete_directoryNotExists() {
         String storedName = "does_not_exist.txt";
         File file = new File("", "");
 

@@ -28,22 +28,22 @@ class MedicationDtoTest {
         MedicationDto original = new MedicationDto();
 
         assertNotNull(original);
-        assertEquals(0, original.getId());
+        assertNull(original.getId());
         assertNull(original.getLabel());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        MedicationDto original = new MedicationDto(1, 1, "paracetamol");
+        MedicationDto original = new MedicationDto("1", 1, "paracetamol");
 
-        assertEquals(1, original.getId());
+        assertEquals("1", original.getId());
         assertEquals("paracetamol", original.getLabel());
     }
 
     @Test
     void testJacksonSerialization_validInput() throws Exception {
         MedicationDto original = new MedicationDto();
-        original.setId(1);
+        original.setId("1");
         original.setLabel("paracetamol");
 
         String json = objectMapper.writeValueAsString(original);
@@ -65,11 +65,11 @@ class MedicationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         MedicationDto m1 = new MedicationDto();
-        m1.setId(1);
+        m1.setId("1");
         m1.setLabel("paracetamol");
 
         MedicationDto m2 = new MedicationDto();
-        m2.setId(1);
+        m2.setId("1");
         m2.setLabel("paracetamol");
 
         assertEquals(m1, m2);
@@ -78,11 +78,11 @@ class MedicationDtoTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         MedicationDto m1 = new MedicationDto();
-        m1.setId(1);
+        m1.setId("1");
         m1.setLabel("paracetamol");
 
         MedicationDto m2 = new MedicationDto();
-        m2.setId(1);
+        m2.setId("1");
         m2.setLabel("paracetamol");
 
         assertEquals(m1.hashCode(), m2.hashCode());
@@ -91,7 +91,7 @@ class MedicationDtoTest {
     @Test
     void testToString() {
         MedicationDto original = new MedicationDto();
-        original.setId(1);
+        original.setId("1");
         original.setLabel("paracetamol");
 
         String expected = "MedicationDto{" +

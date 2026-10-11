@@ -5,7 +5,6 @@ import fr.cfa.hospital.core.exception.AccountNotFoundException;
 import fr.cfa.hospital.core.exception.ResourceNotFoundException;
 import fr.cfa.hospital.doctor.dtos.DoctorDto;
 import fr.cfa.hospital.doctor.dtos.DoctorPostDto;
-import fr.cfa.hospital.patient.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

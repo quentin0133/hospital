@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document("patient")
@@ -27,6 +28,7 @@ public class Patient {
     private String idUser;
 
     public Patient() {
+        consultations = new ArrayList<>();
     }
 
     public Patient(String id, int version, String name, List<Consultation> consultations, String idUser) {

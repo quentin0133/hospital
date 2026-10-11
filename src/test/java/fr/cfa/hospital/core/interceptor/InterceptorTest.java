@@ -1,26 +1,30 @@
 package fr.cfa.hospital.core.interceptor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cfa.hospital.HospitalApplication;
-import fr.cfa.hospital.auth.user.User;
+import fr.cfa.hospital.auth.user.UserRepository;
 import fr.cfa.hospital.auth.user.UserSecurity;
 import fr.cfa.hospital.core.tools.JwtUtils;
-import jakarta.transaction.Transactional;
+import fr.cfa.hospital.doctor.dtos.DoctorPostDto;
+import fr.cfa.hospital.utils.MongoTestSeeder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class InterceptorTest {
     @Autowired
     private MockMvc mockMvc;
@@ -28,11 +32,21 @@ class InterceptorTest {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MongoTestSeeder mongoTestSeeder;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private String jwtToken;
 
     @BeforeEach
     void setup() {
-        UserDetails user = new UserSecurity(new User(1L, "test", "test"));
+        mongoTestSeeder.resetAndSeedDatabase();
+        UserDetails user = new UserSecurity(userRepository.findByUsername("test").orElseThrow());
         jwtToken = jwtUtils.generateToken(user);
     }
 
@@ -40,14 +54,14 @@ class InterceptorTest {
     void pathNotExisting_notConnected() throws Exception {
         mockMvc.perform(
                 get("/sqdfqsdf"))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
     void pathExisting_notConnected() throws Exception {
         mockMvc.perform(
                 get("/api/consultation"))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -56,5 +70,35 @@ class InterceptorTest {
                 get("/sqdfqsdf")
                     .header("Authorization", "Bearer " + jwtToken))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void pathExistingButForbidden_doctorConnected() throws Exception {
+        DoctorPostDto request = new DoctorPostDto();
+        request.setName("Doctor Test");
+        UserDetails user = new UserSecurity(userRepository.findByUsername("doctor").orElseThrow());
+        jwtToken = jwtUtils.generateToken(user);
+
+        mockMvc.perform(
+                        post("/api/medication")
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void pathExistingButForbidden_patientConnected() throws Exception {
+        DoctorPostDto request = new DoctorPostDto();
+        request.setName("Doctor Test");
+        UserDetails user = new UserSecurity(userRepository.findByUsername("patient").orElseThrow());
+        jwtToken = jwtUtils.generateToken(user);
+
+        mockMvc.perform(
+                post("/api/medication")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
     }
 }

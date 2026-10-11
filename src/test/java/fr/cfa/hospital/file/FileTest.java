@@ -67,12 +67,10 @@ class FileTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         File c1 = new File();
-        c1.setId(1L);
         c1.setFileName("file.pdf");
         c1.setStoredFileName("file-215.pdf");
 
         File c2 = new File();
-        c2.setId(1L);
         c2.setFileName("file.pdf");
         c2.setStoredFileName("file-215.pdf");
 
@@ -99,8 +97,7 @@ class FileTest {
         original.setStoredFileName("file-215.pdf");
 
         String expected = "File{" +
-                "id=" + original.getId() +
-                ", fileName='" + original.getFileName() + '\'' +
+                "fileName='" + original.getFileName() + '\'' +
                 ", storedFileName='" + original.getStoredFileName() + '\'' +
                 '}';
         assertEquals(expected, original.toString());

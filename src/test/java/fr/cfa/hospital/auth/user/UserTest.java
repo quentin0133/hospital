@@ -23,9 +23,9 @@ class UserTest {
 
     @Test
     void testConstructorFull_validInput() {
-        User dto = new User(1L, "user", "pwd");
+        User dto = new User("1", "user", "pwd", "ROLE_ADMIN", false);
 
-        assertEquals(1, dto.getId());
+        assertEquals("1", dto.getId());
         assertEquals("user", dto.getUsername());
         assertEquals("pwd", dto.getPassword());
     }
@@ -41,25 +41,27 @@ class UserTest {
     }
 
     @Test
-    void testNotEquals_differentId() {
+    void testEquals_differentId() {
         User c1 = new User();
-        c1.setId(1L);
+        c1.setId("1");
 
         User c2 = new User();
-        c2.setId(2L);
+        c2.setId("1");
 
-        assertNotEquals(c1, c2);
+        assertEquals(c1, c2);
     }
 
     @Test
-    void testNotEquals_differentUsername() {
+    void testEquals_differentUsername() {
         User c1 = new User();
+        c1.setId("1");
         c1.setUsername("1");
 
         User c2 = new User();
+        c2.setId("1");
         c2.setUsername("2");
 
-        assertNotEquals(c1, c2);
+        assertEquals(c1, c2);
     }
 
     @Test
@@ -76,12 +78,12 @@ class UserTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         User c1 = new User();
-        c1.setId(1L);
+        c1.setId("6a8f087b903bb0625fcf3995");
         c1.setUsername("user");
         c1.setPassword("pwd");
 
         User c2 = new User();
-        c2.setId(1L);
+        c2.setId("6a8f087b903bb0625fcf3995");
         c2.setUsername("user");
         c2.setPassword("pwd");
 
@@ -91,12 +93,12 @@ class UserTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         User c1 = new User();
-        c1.setId(1L);
+        c1.setId("6a8f087b903bb0625fcf3995");
         c1.setUsername("user");
         c1.setPassword("pwd");
 
         User c2 = new User();
-        c2.setId(1L);
+        c2.setId("6a8f087b903bb0625fcf3995");
         c2.setUsername("user");
         c2.setPassword("pwd");
 
@@ -106,13 +108,18 @@ class UserTest {
     @Test
     void testToString() {
         User original = new User();
-        original.setId(1L);
+        original.setId("1");
         original.setUsername("user");
         original.setPassword("pwd");
+        original.setRole("ROLE_ADMIN");
+        original.setMustChangePassword(true);
 
         String expected = "User{" +
-            "id=" + original.getId() +
+            "id='" + original.getId() + '\'' +
             ", username='" + original.getUsername() + '\'' +
+            ", password='" + original.getPassword() + '\'' +
+            ", role='" + original.getRole() + '\'' +
+            ", mustChangePassword=" + original.isMustChangePassword() +
             '}';
         assertEquals(expected, original.toString());
     }

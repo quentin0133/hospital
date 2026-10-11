@@ -1,6 +1,7 @@
 package fr.cfa.hospital.prescription.dtos;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.cfa.hospital.medication.dtos.MedicationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,31 +25,26 @@ class PrescriptionDtoTest {
         PrescriptionDto original = new PrescriptionDto();
 
         assertNotNull(original);
-        assertEquals(0, original.getId());
-        assertEquals(0, original.getVersion());
-        assertEquals(0, original.getMedicationId());
-        assertEquals(0, original.getConsultationId());
+        assertNull(original.getMedication());
         assertEquals(0, original.getQuantity());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        PrescriptionDto original = new PrescriptionDto(1L, 0, 1, 1, 1);
+        MedicationDto medication = new MedicationDto();
+        medication.setId("1");
+        PrescriptionDto original = new PrescriptionDto(medication, 1);
 
-        assertEquals(1, original.getId());
-        assertEquals(0, original.getVersion());
-        assertEquals(1, original.getConsultationId());
-        assertEquals(1, original.getMedicationId());
+        assertEquals(medication, original.getMedication());
         assertEquals(1, original.getQuantity());
     }
 
     @Test
     void testJacksonSerialization_validInput() throws Exception {
+        MedicationDto medication = new MedicationDto();
+        medication.setId("1");
         PrescriptionDto original = new PrescriptionDto();
-        original.setId(1);
-        original.setVersion(0);
-        original.setConsultationId(1);
-        original.setMedicationId(1);
+        original.setMedication(medication);
         original.setQuantity(1);
 
         String json = objectMapper.writeValueAsString(original);
@@ -74,36 +70,14 @@ class PrescriptionDtoTest {
     }
 
     @Test
-    void testEquals_shouldNotBeEqualsWhenDifferentId() {
-        PrescriptionDto p1 = new PrescriptionDto();
-        p1.setId(1);
-
-        PrescriptionDto p2 = new PrescriptionDto();
-        p2.setId(2);
-
-        assertNotEquals(p1, p2);
-    }
-
-    @Test
-    void testEquals_shouldBeEqualsWhenDifferentConsultationId() {
-        PrescriptionDto p1 = new PrescriptionDto();
-        p1.setConsultationId(1);
-
-        PrescriptionDto p2 = new PrescriptionDto();
-        p2.setConsultationId(2);
-
-        assertEquals(p1, p2);
-    }
-
-    @Test
     void testEquals_shouldBeEqualsWhenDifferentMedicationId() {
         PrescriptionDto p1 = new PrescriptionDto();
-        p1.setMedicationId(1);
+        p1.setMedication(new MedicationDto("1", 0, ""));
 
         PrescriptionDto p2 = new PrescriptionDto();
-        p2.setMedicationId(2);
+        p2.setMedication(new MedicationDto("2", 0, ""));
 
-        assertEquals(p1, p2);
+        assertNotEquals(p1, p2);
     }
 
     @Test
@@ -114,21 +88,17 @@ class PrescriptionDtoTest {
         PrescriptionDto p2 = new PrescriptionDto();
         p2.setQuantity(2);
 
-        assertEquals(p1, p2);
+        assertNotEquals(p1, p2);
     }
 
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         PrescriptionDto p1 = new PrescriptionDto();
-        p1.setId(1);
-        p1.setConsultationId(1);
-        p1.setMedicationId(1);
+        p1.setMedication(null);
         p1.setQuantity(1);
 
         PrescriptionDto p2 = new PrescriptionDto();
-        p2.setId(1);
-        p2.setConsultationId(1);
-        p2.setMedicationId(1);
+        p2.setMedication(null);
         p2.setQuantity(1);
 
         assertEquals(p1, p2);
@@ -137,15 +107,11 @@ class PrescriptionDtoTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         PrescriptionDto p1 = new PrescriptionDto();
-        p1.setId(1);
-        p1.setConsultationId(1);
-        p1.setMedicationId(1);
+        p1.setMedication(null);
         p1.setQuantity(1);
 
         PrescriptionDto p2 = new PrescriptionDto();
-        p2.setId(1);
-        p2.setConsultationId(1);
-        p2.setMedicationId(1);
+        p2.setMedication(null);
         p2.setQuantity(1);
 
         assertEquals(p1.hashCode(), p2.hashCode());
@@ -154,17 +120,11 @@ class PrescriptionDtoTest {
     @Test
     void testToString() {
         PrescriptionDto original = new PrescriptionDto();
-        original.setId(1);
-        original.setVersion(1);
-        original.setConsultationId(1);
-        original.setMedicationId(1);
+        original.setMedication(new MedicationDto());
         original.setQuantity(1);
 
         String expected = "PrescriptionDto{" +
-            "id=" + original.getId() +
-            ", version=" + original.getVersion() +
-            ", medicationId=" + original.getMedicationId() +
-            ", consultationId=" + original.getConsultationId() +
+            "medication=" + original.getMedication() +
             ", quantity=" + original.getQuantity() +
             '}';
         assertEquals(expected, original.toString());

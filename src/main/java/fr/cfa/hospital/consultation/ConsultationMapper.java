@@ -30,9 +30,6 @@ public abstract class ConsultationMapper extends GenericMapperAbstract<Consultat
     @Mapping(target = "file", ignore = true)
     public abstract Consultation toEntity(ConsultationPostDto dto);
 
-    @Override
-    public abstract ConsultationDto toDto(Consultation entity);
-
     public Doctor mapDoctor(String idDoctor) {
         return doctorRepository.findById(idDoctor)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));

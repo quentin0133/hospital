@@ -25,7 +25,7 @@ class ConsultationDtoTest {
     @BeforeEach
     void setUp() {
         objectMapper = JsonMapper.builder()
-            .addModule(new JavaTimeModule())
+                .addModule(new JavaTimeModule())
             .build();
     }
 
@@ -34,44 +34,50 @@ class ConsultationDtoTest {
         ConsultationDto original = new ConsultationDto();
 
         assertNotNull(original);
-        assertEquals(0, original.getId());
+        assertNull(original.getId());
         assertEquals(0, original.getVersion());
         assertNull(original.getDate());
         assertNull(original.getPatient());
         assertNull(original.getDoctor());
-        assertEquals(new ArrayList<>(), original.getMedications());
+        assertEquals(new ArrayList<>(), original.getPrescriptions());
         assertNull(original.getFile());
     }
 
     @Test
     void testConstructorFull_validInput() {
+        PatientDto patient = new PatientDto();
+        DoctorDto doctor = new DoctorDto();
+
+        patient.setId("1");
+        doctor.setId("1");
+
         ConsultationDto original = new ConsultationDto(
-            1L,
+            "1",
             1,
             LocalDate.now(),
-            new PatientDto(),
-            new DoctorDto(),
+            patient,
+            doctor,
             new ArrayList<>(),
             new FileDto()
         );
 
-        assertEquals(1, original.getId());
+        assertEquals("1", original.getId());
         assertEquals(1, original.getVersion());
         assertEquals(LocalDate.now(), original.getDate());
-        assertEquals(new PatientDto(), original.getPatient());
-        assertEquals(new DoctorDto(), original.getDoctor());
-        assertEquals(new ArrayList<>(), original.getMedications());
+        assertEquals(patient, original.getPatient());
+        assertEquals(doctor, original.getDoctor());
+        assertEquals(new ArrayList<>(), original.getPrescriptions());
         assertEquals(new FileDto(), original.getFile());
     }
 
     @Test
     void testJacksonSerialization_validInput() throws Exception {
         ConsultationDto original = new ConsultationDto();
-        original.setId(1);
+        original.setId("1");
         original.setDate(LocalDate.now());
         original.setDoctor(new DoctorDto());
         original.setPatient(new PatientDto());
-        original.setMedications(new ArrayList<>());
+        original.setPrescriptions(new ArrayList<>());
         original.setFile(new FileDto());
 
         String json = objectMapper.writeValueAsString(original);
@@ -93,10 +99,10 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldNotBeEqualsWhenDifferentId() {
         ConsultationDto c1 = new ConsultationDto();
-        c1.setId(1L);
+        c1.setId("1");
 
         ConsultationDto c2 = new ConsultationDto();
-        c2.setId(2L);
+        c2.setId("2");
 
         assertNotEquals(c1, c2);
     }
@@ -104,9 +110,11 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentVersion() {
         ConsultationDto c1 = new ConsultationDto();
+        c1.setId("1");
         c1.setVersion(1);
 
         ConsultationDto c2 = new ConsultationDto();
+        c2.setId("1");
         c2.setVersion(2);
 
         assertEquals(c1, c2);
@@ -116,9 +124,11 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentDate() {
         ConsultationDto c1 = new ConsultationDto();
+        c1.setId("1");
         c1.setDate(LocalDate.now());
 
         ConsultationDto c2 = new ConsultationDto();
+        c2.setId("1");
         c2.setDate(null);
 
         assertEquals(c1, c2);
@@ -127,9 +137,11 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentDoctor() {
         ConsultationDto c1 = new ConsultationDto();
+        c1.setId("1");
         c1.setDoctor(new DoctorDto());
 
         ConsultationDto c2 = new ConsultationDto();
+        c2.setId("1");
         c2.setDoctor(null);
 
         assertEquals(c1, c2);
@@ -138,9 +150,11 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentPatient() {
         ConsultationDto c1 = new ConsultationDto();
+        c1.setId("1");
         c1.setPatient(new PatientDto());
 
         ConsultationDto c2 = new ConsultationDto();
+        c2.setId("1");
         c2.setPatient(null);
 
         assertEquals(c1, c2);
@@ -149,10 +163,12 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentMedications() {
         ConsultationDto c1 = new ConsultationDto();
-        c1.setMedications(new ArrayList<>());
+        c1.setId("1");
+        c1.setPrescriptions(new ArrayList<>());
 
         ConsultationDto c2 = new ConsultationDto();
-        c2.setMedications(null);
+        c2.setId("1");
+        c2.setPrescriptions(null);
 
         assertEquals(c1, c2);
     }
@@ -160,9 +176,11 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentFile() {
         ConsultationDto c1 = new ConsultationDto();
+        c1.setId("1");
         c1.setFile(new FileDto());
 
         ConsultationDto c2 = new ConsultationDto();
+        c2.setId("1");
         c2.setFile(null);
 
         assertEquals(c1, c2);
@@ -171,21 +189,21 @@ class ConsultationDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         ConsultationDto c1 = new ConsultationDto();
-        c1.setId(1);
+        c1.setId("1");
         c1.setVersion(1);
         c1.setDate(LocalDate.now());
         c1.setDoctor(new DoctorDto());
         c1.setPatient(new PatientDto());
-        c1.setMedications(new ArrayList<>());
+        c1.setPrescriptions(new ArrayList<>());
         c1.setFile(new FileDto());
 
         ConsultationDto c2 = new ConsultationDto();
-        c2.setId(1);
+        c2.setId("1");
         c2.setVersion(1);
         c2.setDate(LocalDate.now());
         c2.setDoctor(new DoctorDto());
         c2.setPatient(new PatientDto());
-        c2.setMedications(new ArrayList<>());
+        c2.setPrescriptions(new ArrayList<>());
         c2.setFile(new FileDto());
 
         assertEquals(c1, c2);
@@ -194,21 +212,21 @@ class ConsultationDtoTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         ConsultationDto c1 = new ConsultationDto();
-        c1.setId(1);
+        c1.setId("1");
         c1.setVersion(1);
         c1.setDate(LocalDate.now());
         c1.setDoctor(new DoctorDto());
         c1.setPatient(new PatientDto());
-        c1.setMedications(new ArrayList<>());
+        c1.setPrescriptions(new ArrayList<>());
         c1.setFile(new FileDto());
 
         ConsultationDto c2 = new ConsultationDto();
-        c2.setId(1);
+        c2.setId("1");
         c2.setVersion(1);
         c2.setDate(LocalDate.now());
         c2.setDoctor(new DoctorDto());
         c2.setPatient(new PatientDto());
-        c2.setMedications(new ArrayList<>());
+        c2.setPrescriptions(new ArrayList<>());
         c2.setFile(new FileDto());
 
         assertEquals(c1.hashCode(), c2.hashCode());
@@ -217,20 +235,20 @@ class ConsultationDtoTest {
     @Test
     void testToString() {
         ConsultationDto original = new ConsultationDto();
-        original.setId(1);
+        original.setId("1");
         original.setVersion(1);
         original.setDate(LocalDate.now());
         original.setDoctor(new DoctorDto());
         original.setPatient(new PatientDto());
-        original.setMedications(new ArrayList<>());
+        original.setPrescriptions(new ArrayList<>());
         original.setFile(new FileDto());
 
         String expected = "ConsultationDto{" +
-                "id=" + original.getId() +
+                "id='" + original.getId() + '\'' +
                 ", version=" + original.getVersion() +
                 ", doctor=" + original.getDoctor() +
                 ", patient=" + original.getPatient() +
-                ", medications=" + original.getMedications() +
+                ", prescriptions=" + original.getPrescriptions() +
                 ", date=" + original.getDate() +
                 ", file=" + original.getFile() +
                 '}';

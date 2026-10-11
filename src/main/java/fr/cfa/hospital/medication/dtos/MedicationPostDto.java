@@ -10,7 +10,7 @@ public class MedicationPostDto {
     public MedicationPostDto() {
     }
 
-    public MedicationPostDto(String id, int version, String label, int quantity) {
+    public MedicationPostDto(String id, int version, String label) {
         this.id = id;
         this.version = version;
         this.label = label;

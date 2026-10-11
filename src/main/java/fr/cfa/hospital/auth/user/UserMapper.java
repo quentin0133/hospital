@@ -4,7 +4,6 @@ import fr.cfa.hospital.auth.user.dtos.UserDto;
 import fr.cfa.hospital.auth.user.dtos.UserPostDto;
 import fr.cfa.hospital.core.generic.GenericMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

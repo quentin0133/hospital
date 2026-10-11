@@ -85,8 +85,8 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     public FileDto uploadFiles(FilePostDto dto) throws IOException {
-        Consultation consultation = repository.findById(dto.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Consultation", dto.getId()));
+        Consultation consultation = repository.findById(dto.getIdConsultation())
+                .orElseThrow(() -> new ResourceNotFoundException("Consultation", dto.getIdConsultation()));
 
         MultipartFile multipartFile = dto.getFile();
         if (multipartFile == null || multipartFile.isEmpty()) {

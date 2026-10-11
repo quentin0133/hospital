@@ -1,7 +1,5 @@
 package fr.cfa.hospital.auth.user.dtos;
 
-import java.util.Objects;
-
 public class ChangePasswordDto {
     private String currentPassword;
 

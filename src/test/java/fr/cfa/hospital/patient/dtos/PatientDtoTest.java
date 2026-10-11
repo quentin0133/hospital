@@ -24,15 +24,15 @@ class PatientDtoTest {
         PatientDto original = new PatientDto();
 
         assertNotNull(original);
-        assertEquals(0, original.getId());
+        assertNull(original.getId());
         assertNull(original.getName());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        PatientDto original = new PatientDto(1L, 0, "Michel");
+        PatientDto original = new PatientDto("1", 0, "Michel", null);
 
-        assertEquals(1, original.getId());
+        assertEquals("1", original.getId());
         assertEquals(0, original.getVersion());
         assertEquals("Michel", original.getName());
     }
@@ -40,7 +40,7 @@ class PatientDtoTest {
     @Test
     void testJacksonSerialization_validInput() throws Exception {
         PatientDto original = new PatientDto();
-        original.setId(1);
+        original.setId("1");
         original.setVersion(0);
         original.setName("Michel");
 
@@ -69,20 +69,22 @@ class PatientDtoTest {
     @Test
     void testEquals_shouldNotBeEqualsWhenDifferentId() {
         PatientDto p1 = new PatientDto();
-        p1.setId(1);
+        p1.setId("1");
 
         PatientDto p2 = new PatientDto();
-        p2.setId(2);
+        p2.setId("2");
 
         assertNotEquals(p1, p2);
     }
 
     @Test
-    void testEquals_shouldBeEqualsWhenDifferentConsultationId() {
+    void testEquals_shouldBeEqualsWhenDifferentName() {
         PatientDto p1 = new PatientDto();
+        p1.setId("1");
         p1.setName("1");
 
         PatientDto p2 = new PatientDto();
+        p2.setId("1");
         p2.setName("2");
 
         assertEquals(p1, p2);
@@ -91,12 +93,12 @@ class PatientDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         PatientDto p1 = new PatientDto();
-        p1.setId(1);
+        p1.setId("1");
         p1.setVersion(0);
         p1.setName("Michel");
 
         PatientDto p2 = new PatientDto();
-        p2.setId(1);
+        p2.setId("1");
         p2.setVersion(0);
         p2.setName("Michel");
 
@@ -106,12 +108,12 @@ class PatientDtoTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         PatientDto p1 = new PatientDto();
-        p1.setId(1);
+        p1.setId("1");
         p1.setVersion(0);
         p1.setName("Michel");
 
         PatientDto p2 = new PatientDto();
-        p2.setId(1);
+        p2.setId("1");
         p2.setVersion(0);
         p2.setName("Michel");
 
@@ -121,14 +123,15 @@ class PatientDtoTest {
     @Test
     void testToString() {
         PatientDto original = new PatientDto();
-        original.setId(1);
+        original.setId("1");
         original.setVersion(1);
         original.setName("Michel");
 
         String expected = "PatientDto{" +
-            "id=" + original.getId() +
+            "id='" + original.getId() + '\'' +
             ", version=" + original.getVersion() +
             ", name='" + original.getName() + '\'' +
+            ", idUser='" + original.getIdUser() + '\'' +
             '}';
         assertEquals(expected, original.toString());
     }

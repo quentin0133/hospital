@@ -1,11 +1,10 @@
 package fr.cfa.hospital.doctor;
 
 import fr.cfa.hospital.HospitalApplication;
-import fr.cfa.hospital.auth.user.User;
+import fr.cfa.hospital.auth.user.UserRepository;
 import fr.cfa.hospital.auth.user.UserSecurity;
 import fr.cfa.hospital.core.tools.JwtUtils;
 import fr.cfa.hospital.doctor.dtos.DoctorDto;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class DoctorIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -30,11 +28,14 @@ class DoctorIntegrationTest {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private String jwtToken;
 
     @BeforeEach
     void setup() {
-        UserDetails user = new UserSecurity(new User(1L, "test", "test"));
+        UserDetails user = new UserSecurity(userRepository.findByUsername("test").orElseThrow());
         jwtToken = jwtUtils.generateToken(user);
     }
 
@@ -86,13 +87,13 @@ class DoctorIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalElements").value(0));
+            .andExpect(jsonPath("$.page.totalElements").value(0));
     }
 
     @Test
     void findById() throws Exception {
         int id = 1;
-        DoctorDto expected = new DoctorDto(1L, 0, "Jean-Pierre MARTIN");
+        DoctorDto expected = new DoctorDto("1", 0, "Jean-Pierre MARTIN", null);
 
         mockMvc.perform(
                 get("/api/doctor/id/{id}", id)

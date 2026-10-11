@@ -6,11 +6,7 @@ import fr.cfa.hospital.auth.user.User;
 import fr.cfa.hospital.auth.user.UserSecurity;
 import fr.cfa.hospital.consultation.dtos.ConsultationPostDto;
 import fr.cfa.hospital.core.tools.JwtUtils;
-import fr.cfa.hospital.doctor.Doctor;
-import fr.cfa.hospital.doctor.DoctorRepository;
-import fr.cfa.hospital.patient.Patient;
-import fr.cfa.hospital.patient.PatientRepository;
-import jakarta.transaction.Transactional;
+import fr.cfa.hospital.utils.MongoTestSeeder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +24,6 @@ import org.springframework.util.FileSystemUtils;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -37,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class ConsultationIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -49,13 +43,10 @@ class ConsultationIntegrationTest {
     private ConsultationRepository consultationRepository;
 
     @Autowired
-    private DoctorRepository doctorRepository;
-
-    @Autowired
-    private PatientRepository patientRepository;
-
-    @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private MongoTestSeeder mongoTestSeeder;
 
     private String jwtToken;
 
@@ -64,7 +55,8 @@ class ConsultationIntegrationTest {
 
     @BeforeEach
     void setup() {
-        UserDetails user = new UserSecurity(new User(1L, "test", "test"));
+        mongoTestSeeder.resetAndSeedDatabase();
+        UserDetails user = new UserSecurity(new User("user-1", "test", "test", "ROLE_ADMIN", false));
         jwtToken = jwtUtils.generateToken(user);
     }
 
@@ -79,7 +71,7 @@ class ConsultationIntegrationTest {
 
     @Test
     void testFindByPatientId_shouldReturn200() throws Exception {
-        int idPatient = 1;
+        String idPatient = "1";
         String page = "0";
         String pageSize = "10";
 
@@ -90,7 +82,7 @@ class ConsultationIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isNotEmpty())
+            .andExpect(jsonPath("$.content").isNotEmpty())
             .andExpect(jsonPath("$.content[0].patient.name")
                 .value("Michel DUBOIS"))
             .andExpect(jsonPath("$.content[0].doctor.name")
@@ -110,14 +102,14 @@ class ConsultationIntegrationTest {
                     .param("page", page)
                     .param("size", pageSize))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalElements").value(0));
+            .andExpect(jsonPath("$.page.totalElements").value(0));
     }
 
     @Test
     void testSave_shouldReturn201() throws Exception {
         ConsultationPostDto dto = new ConsultationPostDto();
-        dto.setPatientId(2L);
-        dto.setDoctorId(2L);
+        dto.setPatientId("2");
+        dto.setDoctorId("2");
         dto.setDate(LocalDate.of(2025, 5, 12));
 
         mockMvc.perform(
@@ -134,9 +126,9 @@ class ConsultationIntegrationTest {
     @Test
     void testSave_shouldReturn400WhenWithId() throws Exception {
         ConsultationPostDto dto = new ConsultationPostDto();
-        dto.setId(1L);
-        dto.setPatientId(2L);
-        dto.setDoctorId(2L);
+        dto.setId("1");
+        dto.setPatientId("2");
+        dto.setDoctorId("2");
         dto.setDate(LocalDate.of(2025, 5, 12));
 
         mockMvc.perform(
@@ -150,9 +142,10 @@ class ConsultationIntegrationTest {
     @Test
     void testUpdate_shouldReturn200() throws Exception {
         ConsultationPostDto dto = new ConsultationPostDto();
-        dto.setId(1L);
-        dto.setPatientId(3L);
-        dto.setDoctorId(3L);
+        dto.setId("1");
+        dto.setVersion(1);
+        dto.setPatientId("3");
+        dto.setDoctorId("3");
         dto.setDate(LocalDate.of(2023, 9, 1));
 
         mockMvc.perform(
@@ -169,8 +162,8 @@ class ConsultationIntegrationTest {
     @Test
     void testUpdate_shouldReturn400WhenWithoutId() throws Exception {
         ConsultationPostDto dto = new ConsultationPostDto();
-        dto.setPatientId(2L);
-        dto.setDoctorId(2L);
+        dto.setPatientId("2");
+        dto.setDoctorId("2");
         dto.setDate(LocalDate.of(2025, 5, 12));
 
         mockMvc.perform(
@@ -190,7 +183,7 @@ class ConsultationIntegrationTest {
                     .header("Authorization","Bearer " + jwtToken))
             .andExpect(status().isNoContent());
 
-        assertFalse(consultationRepository.existsById(1L));
+        assertFalse(consultationRepository.existsById("1"));
     }
 
     @Test
@@ -213,7 +206,7 @@ class ConsultationIntegrationTest {
         mockMvc.perform(
                 multipart("/api/consultation/upload")
                     .file(file)
-                    .param("id", id)
+                    .param("idConsultation", id)
                     .with(request -> { request.setMethod("PUT"); return request; })
                     .header("Authorization","Bearer " + jwtToken))
             .andExpect(status().isBadRequest());
@@ -225,7 +218,7 @@ class ConsultationIntegrationTest {
 
         mockMvc.perform(
                 multipart("/api/consultation/upload")
-                    .param("id", id)
+                    .param("idConsultation", id)
                     .with(request -> { request.setMethod("PUT"); return request; })
                     .header("Authorization","Bearer " + jwtToken))
             .andExpect(status().isBadRequest());
@@ -233,15 +226,7 @@ class ConsultationIntegrationTest {
 
     @Test
     void testRetrieveFile_shouldReturn200() throws Exception {
-        Consultation consultation = consultationRepository.saveAndFlush(new Consultation(
-            0L,
-            1,
-            LocalDate.now(),
-            patientRepository.saveAndFlush(new Patient(0L, 1, "Michel", new ArrayList<>())),
-            doctorRepository.saveAndFlush(new Doctor(0L, 1, "Bernard", new ArrayList<>())),
-            new ArrayList<>(),
-            null
-        ));
+        Consultation consultation = consultationRepository.findById("1").orElseThrow();
 
         MockMultipartFile file = new MockMultipartFile(
             "file", "test.pdf", "application/pdf", "Hello World".getBytes()
@@ -250,7 +235,7 @@ class ConsultationIntegrationTest {
         mockMvc.perform(
                 multipart("/api/consultation/upload")
                     .file(file)
-                    .param("id", String.valueOf(consultation.getId()))
+                    .param("idConsultation", consultation.getId())
                     .with(request -> { request.setMethod("PUT"); return request; })
                     .header("Authorization", "Bearer " + jwtToken))
             .andExpect(status().isOk())

@@ -15,21 +15,22 @@ class UserDtoTest {
         UserDto dto = new UserDto();
 
         assertNotNull(dto);
-        assertEquals(0, dto.getId());
+        assertNull(dto.getId());
         assertNull(dto.getUsername());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        UserDto dto = new UserDto(1, "michel");
+        UserDto dto = new UserDto("1", "michel", "ROLE_ADMIN");
 
-        assertEquals(1, dto.getId());
+        assertEquals("1", dto.getId());
         assertEquals("michel", dto.getUsername());
     }
 
     @Test
     void testEquals_shouldBeEqualsWhenSameInstance() {
         UserDto original = new UserDto();
+        original.setId("1");
         assertEquals(original, original);
     }
 
@@ -46,10 +47,10 @@ class UserDtoTest {
     @Test
     void testEquals_differentId() {
         UserDto c1 = new UserDto();
-        c1.setId(1);
+        c1.setId("6a8f087b903bb0625fcf3995");
 
         UserDto c2 = new UserDto();
-        c2.setId(2);
+        c2.setId("6a8f087b0625fcfsqdqs995");
 
         assertNotEquals(c1, c2);
     }
@@ -57,9 +58,11 @@ class UserDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenDifferentUsername() {
         UserDto c1 = new UserDto();
+        c1.setId("1");
         c1.setUsername("1");
 
         UserDto c2 = new UserDto();
+        c2.setId("1");
         c2.setUsername("2");
 
         assertEquals(c1, c2);
@@ -68,11 +71,11 @@ class UserDtoTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         UserDto c1 = new UserDto();
-        c1.setId(1);
+        c1.setId("6a8f087b903bb0625fcf3995");
         c1.setUsername("michel");
 
         UserDto c2 = new UserDto();
-        c2.setId(1);
+        c2.setId("6a8f087b903bb0625fcf3995");
         c2.setUsername("michel");
 
         assertEquals(c1, c2);
@@ -81,11 +84,11 @@ class UserDtoTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         UserDto c1 = new UserDto();
-        c1.setId(1);
+        c1.setId("6a8f087b903bb0625fcf3995");
         c1.setUsername("michel");
 
         UserDto c2 = new UserDto();
-        c2.setId(1);
+        c2.setId("6a8f087b903bb0625fcf3995");
         c2.setUsername("michel");
 
         assertEquals(c1.hashCode(), c2.hashCode());
@@ -94,12 +97,14 @@ class UserDtoTest {
     @Test
     void testToString() {
         UserDto user = new UserDto();
-        user.setId(1);
+        user.setId("1");
         user.setUsername("michel");
+        user.setRole("ROLE_ADMIN");
 
         String expected = "UserDto{" +
-            "id=" + user.getId() +
+            "id='" + user.getId() + '\'' +
             ", username='" + user.getUsername() + '\'' +
+            ", role='" + user.getRole() + '\'' +
             '}';
         assertEquals(expected, user.toString());
     }

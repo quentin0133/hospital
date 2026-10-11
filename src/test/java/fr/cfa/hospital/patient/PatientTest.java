@@ -27,16 +27,18 @@ class PatientTest {
 
         assertNotNull(original);
         assertNull(original.getId());
+        assertEquals(0, original.getVersion());
         assertNull(original.getName());
         assertEquals(new ArrayList<>(), original.getConsultations());
+        assertNull(original.getIdUser());
     }
 
     @Test
     void testConstructorFull_validInput() {
-        Patient original = new Patient(1L, 1, "Michel", new ArrayList<>());
+        Patient original = new Patient("1", 1, "Michel", new ArrayList<>(), null);
 
         assertNotNull(original);
-        assertEquals(1, original.getId());
+        assertEquals("1", original.getId());
         assertEquals("Michel", original.getName());
         assertEquals(new ArrayList<>(), original.getConsultations());
     }
@@ -44,7 +46,7 @@ class PatientTest {
     @Test
     void testJacksonSerialization_validInput() throws Exception {
         Patient original = new Patient();
-        original.setId(1L);
+        original.setId("1");
         original.setName("Michel");
         original.setConsultations(new ArrayList<>());
 
@@ -73,47 +75,79 @@ class PatientTest {
     @Test
     void testEquals_shouldNotBeEqualsWhenDifferentId() {
         Patient p1 = new Patient();
-        p1.setId(1L);
+        p1.setId("1");
 
         Patient p2 = new Patient();
-        p2.setId(2L);
+        p2.setId("2");
 
         assertNotEquals(p1, p2);
     }
 
     @Test
-    void testEquals_differentName() {
+    void testEquals_shouldNotBeEqualsWhenIdNull() {
         Patient p1 = new Patient();
+        p1.setId(null);
+
+        Patient p2 = new Patient();
+        p2.setId(null);
+
+        assertNotEquals(p1, p2);
+    }
+
+    @Test
+    void testEquals_shouldBeEqualsWhenDifferentName() {
+        Patient p1 = new Patient();
+        p1.setId("1");
         p1.setName("1");
 
         Patient p2 = new Patient();
+        p2.setId("1");
         p2.setName("2");
 
-        assertNotEquals(p1, p2);
+        assertEquals(p1, p2);
     }
 
     @Test
-    void testEquals_differentConsultations() {
+    void testEquals_shouldBeEqualsWhenDifferentConsultations() {
         Patient p1 = new Patient();
+        p1.setId("1");
         p1.setConsultations(new ArrayList<>());
 
         Patient p2 = new Patient();
+        p2.setId("1");
         p2.setConsultations(null);
 
-        assertNotEquals(p1, p2);
+        assertEquals(p1, p2);
+    }
+
+    @Test
+    void testEquals_shouldBeEqualsWhenDifferentIdUser() {
+        Patient p1 = new Patient();
+        p1.setId("1");
+        p1.setIdUser("1");
+
+        Patient p2 = new Patient();
+        p2.setId("1");
+        p2.setIdUser("2");
+
+        assertEquals(p1, p2);
     }
 
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         Patient p1 = new Patient();
-        p1.setId(1L);
+        p1.setId("1");
+        p1.setVersion(1);
         p1.setName("Michel");
         p1.setConsultations(new ArrayList<>());
+        p1.setIdUser("5");
 
         Patient p2 = new Patient();
-        p2.setId(1L);
+        p2.setId("1");
+        p2.setVersion(1);
         p2.setName("Michel");
         p2.setConsultations(new ArrayList<>());
+        p2.setIdUser("5");
 
         assertEquals(p1, p2);
     }
@@ -121,14 +155,18 @@ class PatientTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         Patient p1 = new Patient();
-        p1.setId(1L);
+        p1.setId("1");
+        p1.setVersion(1);
         p1.setName("Michel");
         p1.setConsultations(new ArrayList<>());
+        p1.setIdUser("5");
 
         Patient p2 = new Patient();
-        p2.setId(1L);
+        p2.setId("1");
+        p2.setVersion(1);
         p2.setName("Michel");
         p2.setConsultations(new ArrayList<>());
+        p2.setIdUser("5");
 
         assertEquals(p1.hashCode(), p2.hashCode());
     }
@@ -136,15 +174,16 @@ class PatientTest {
     @Test
     void testToString() {
         Patient original = new Patient();
-        original.setId(1L);
+        original.setId("1");
         original.setName("Michel");
         original.setConsultations(new ArrayList<>());
 
         String expected = "Patient{" +
-                "id=" + original.getId() +
+                "id='" + original.getId() + '\'' +
                 ", version=" + original.getVersion() +
                 ", name='" + original.getName() + '\'' +
                 ", consultations=" + original.getConsultations() +
+                ", idUser='" + original.getIdUser() + '\'' +
                 '}';
         assertEquals(expected, original.toString());
     }

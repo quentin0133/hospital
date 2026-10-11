@@ -23,8 +23,9 @@ class UserMapperImplTest {
     @Test
     void toDto_validInput() {
         UserDto expected = new UserDto();
+        expected.setId("1");
         User user = new User();
-        user.setId(0L);
+        user.setId("1");
 
         UserDto result = userMapperImpl.toDto(user);
 

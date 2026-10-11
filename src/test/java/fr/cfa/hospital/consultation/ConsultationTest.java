@@ -36,10 +36,10 @@ class ConsultationTest {
         Patient expectedPatient = new Patient();
         Doctor expectedDoctor = new Doctor();
         File expectedFile = new File();
-        Consultation dto = new Consultation(1L, 1, LocalDate.now(),
+        Consultation dto = new Consultation("1", 1, LocalDate.now(),
                 expectedPatient, expectedDoctor, List.of(), expectedFile);
 
-        assertEquals(1, dto.getId());
+        assertEquals("1", dto.getId());
         assertEquals(LocalDate.now(), dto.getDate());
         assertEquals(expectedPatient, dto.getPatient());
         assertEquals(expectedDoctor, dto.getDoctor());
@@ -60,10 +60,10 @@ class ConsultationTest {
     @Test
     void testNotEquals_shouldNotEqualsWhenDifferentId() {
         Consultation c1 = new Consultation();
-        c1.setId(1L);
+        c1.setId("1");
 
         Consultation c2 = new Consultation();
-        c2.setId(2L);
+        c2.setId("2");
 
         assertNotEquals(c1, c2);
     }
@@ -126,7 +126,7 @@ class ConsultationTest {
     @Test
     void testEquals_shouldBeEqualsWhenSameProperties() {
         Consultation c1 = new Consultation();
-        c1.setId(1L);
+        c1.setId("1");
         c1.setDate(LocalDate.now());
         c1.setPrescriptions(new ArrayList<>());
         c1.setFile(new File());
@@ -134,7 +134,7 @@ class ConsultationTest {
         c1.setDoctor(new Doctor());
 
         Consultation c2 = new Consultation();
-        c2.setId(1L);
+        c2.setId("1");
         c2.setDate(LocalDate.now());
         c2.setPrescriptions(new ArrayList<>());
         c2.setFile(new File());
@@ -147,7 +147,7 @@ class ConsultationTest {
     @Test
     void testHashCode_shouldBeEqualsWhenSameProperties() {
         Consultation c1 = new Consultation();
-        c1.setId(1L);
+        c1.setId("1");
         c1.setDate(LocalDate.now());
         c1.setPrescriptions(new ArrayList<>());
         c1.setFile(new File());
@@ -155,7 +155,7 @@ class ConsultationTest {
         c1.setDoctor(new Doctor());
 
         Consultation c2 = new Consultation();
-        c2.setId(1L);
+        c2.setId("1");
         c2.setDate(LocalDate.now());
         c2.setPrescriptions(new ArrayList<>());
         c2.setFile(new File());
@@ -168,7 +168,7 @@ class ConsultationTest {
     @Test
     void testToString() {
         Consultation original = new Consultation();
-        original.setId(1L);
+        original.setId("1");
         original.setVersion(0);
         original.setDate(LocalDate.now());
         original.setPrescriptions(new ArrayList<>());

@@ -116,7 +116,7 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 # Script SQL for inserting data
-spring.sql.init.data-locations=classpath:db/test/data.sql
+spring.sql.init.data-locations=classpath:db/test/data.json
 spring.sql.init.mode=always
 spring.jpa.defer-datasource-initialization=true
 

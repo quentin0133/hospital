@@ -42,7 +42,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
-    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("#id == authentication.principal.user.id or hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE, params = {"page", "size"})
     public ResponseEntity<Page<ConsultationDto>> findByPatientId(@PathVariable String id, Pageable pageable) {
         return ResponseEntity.ok(service.findByPatientId(id, pageable));

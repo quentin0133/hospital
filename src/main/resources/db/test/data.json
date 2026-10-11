@@ -1,0 +1,58 @@
+[
+  { "_class": "fr.cfa.hospital.auth.user.User", "id": "user-1", "username": "test", "password": "$2a$12$X4u4Ig5F4jRa/7Ms0CpdounYb0VhshpcT8rrwPi/Z.dFex0tUqANW", "role": "ROLE_ADMIN" },
+  { "_class": "fr.cfa.hospital.auth.user.User", "id": "user-2", "username": "doctor", "password": "$2a$12$X4u4Ig5F4jRa/7Ms0CpdounYb0VhshpcT8rrwPi/Z.dFex0tUqANW", "role": "ROLE_DOCTOR" },
+  { "_class": "fr.cfa.hospital.auth.user.User", "id": "user-3", "username": "patient", "password": "$2a$12$X4u4Ig5F4jRa/7Ms0CpdounYb0VhshpcT8rrwPi/Z.dFex0tUqANW", "role": "ROLE_PATIENT" },
+
+  { "_class": "fr.cfa.hospital.patient.Patient", "id": "1", "version": 0, "name": "Michel DUBOIS" },
+  { "_class": "fr.cfa.hospital.patient.Patient", "id": "2", "version": 0, "name": "Patrique DUPONT" },
+  { "_class": "fr.cfa.hospital.patient.Patient", "id": "3", "version": 0, "name": "Louis TOLIER" },
+  { "_class": "fr.cfa.hospital.patient.Patient", "id": "4", "version": 0, "name": "Pierre CHARENZON" },
+  { "_class": "fr.cfa.hospital.patient.Patient", "id": "5", "version": 0, "name": "Paul FORT" },
+
+  { "_class": "fr.cfa.hospital.doctor.Doctor", "id": "1", "version": 0, "name": "Jean-Pierre MARTIN" },
+  { "_class": "fr.cfa.hospital.doctor.Doctor", "id": "2", "version": 0, "name": "Claire DUBOIS" },
+  { "_class": "fr.cfa.hospital.doctor.Doctor", "id": "3", "version": 0, "name": "Philippe BERNARD" },
+  { "_class": "fr.cfa.hospital.doctor.Doctor", "id": "4", "version": 0, "name": "Sophie LEFEVRE" },
+  { "_class": "fr.cfa.hospital.doctor.Doctor", "id": "5", "version": 0, "name": "Laurent MOREAU" },
+
+  { "_class": "fr.cfa.hospital.medication.Medication", "id": "1", "version": 0, "label": "Doliprane" },
+  { "_class": "fr.cfa.hospital.medication.Medication", "id": "2", "version": 0, "label": "Efferalgan" },
+  { "_class": "fr.cfa.hospital.medication.Medication", "id": "3", "version": 0, "label": "Paracétamol" },
+  { "_class": "fr.cfa.hospital.medication.Medication", "id": "4", "version": 0, "label": "Ibuprofène" },
+  { "_class": "fr.cfa.hospital.medication.Medication", "id": "5", "version": 0, "label": "Amoxicilline" },
+  { "_class": "fr.cfa.hospital.medication.Medication", "id": "6", "version": 0, "label": "Augmentin" },
+
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "1", "version": 0, "date": "2024-06-05", "patient": { "id": "1" }, "doctor": { "id": "1" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "2", "version": 0, "date": "2025-02-04", "patient": { "id": "2" }, "doctor": { "id": "1" },
+    "prescriptions": [
+      { "quantity": 1, "medication": { "id": "5" }}
+    ]
+  },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "3", "version": 0, "date": "2026-01-18", "patient": { "id": "1" }, "doctor": { "id": "2" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "4", "version": 0, "date": "2027-04-16", "patient": { "id": "3" }, "doctor": { "id": "2" },
+    "prescriptions": [
+      { "quantity": 5, "medication": { "id": "4" } }
+    ]
+  },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "5", "version": 0, "date": "2024-12-01", "patient": { "id": "2" }, "doctor": { "id": "3" },
+    "prescriptions": [
+      { "quantity": 4, "medication": { "id": "3" } }
+    ]
+  },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "6", "version": 0, "date": "2025-12-07", "patient": { "id": "3" }, "doctor": { "id": "3" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "7", "version": 0, "date": "2028-05-28", "patient": { "id": "1" }, "doctor": { "id": "3" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "8", "version": 0, "date": "2023-08-22", "patient": { "id": "3" }, "doctor": { "id": "5" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "9", "version": 0, "date": "2023-09-23", "patient": { "id": "2" }, "doctor": { "id": "5" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "10", "version": 0, "date": "2022-09-05", "patient": { "id": "1" }, "doctor": { "id": "1" },
+    "prescriptions": [
+      { "quantity": 2, "medication": { "id": "1" } },
+      { "quantity": 5, "medication": { "id": "2" } },
+      { "quantity": 2, "medication": { "id": "3" } }
+    ]
+  },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "11", "version": 0, "date": "2025-05-04", "patient": { "id": "1" }, "doctor": { "id": "2" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "12", "version": 0, "date": "2024-11-18", "patient": { "id": "2" }, "doctor": { "id": "5" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "13", "version": 0, "date": "2026-08-18", "patient": { "id": "3" }, "doctor": { "id": "5" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "14", "version": 0, "date": "2026-04-26", "patient": { "id": "3" }, "doctor": { "id": "3" } },
+  { "_class": "fr.cfa.hospital.consultation.Consultation", "id": "15", "version": 0, "date": "2027-02-14", "patient": { "id": "2" }, "doctor": { "id": "3" } }
+]
