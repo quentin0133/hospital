@@ -198,19 +198,20 @@ class ConsultationServiceImplTest {
 
         // Mockup methods
         when(consultationRepository.save(any(Consultation.class))).thenReturn(consultation);
-        when(consultationRepository.existsById(anyString())).thenReturn(true);
+        when(consultationRepository.findById(anyString())).thenReturn(Optional.of(consultation));
         when(consultationMapper.toDto(any(Consultation.class))).thenReturn(consultationDto);
-        when(consultationMapper.toEntity(any(ConsultationPostDto.class))).thenReturn(consultation);
+        when(consultationMapper.updateEntityFromDto(any(ConsultationPostDto.class), any(Consultation.class)))
+            .thenReturn(consultation);
 
         ConsultationDto result = consultationServiceImpl.update(request);
 
         assertEquals(consultationDto, result);
 
         // Check the number of calls
-        verify(consultationRepository).existsById(anyString());
+        verify(consultationRepository).findById(anyString());
         verify(consultationRepository).save(any(Consultation.class));
         verify(consultationMapper).toDto(any(Consultation.class));
-        verify(consultationMapper).toEntity(any(ConsultationPostDto.class));
+        verify(consultationMapper).updateEntityFromDto(any(ConsultationPostDto.class), any(Consultation.class));
     }
 
     @Test
@@ -221,12 +222,12 @@ class ConsultationServiceImplTest {
         );
 
         // Mockup methods
-        when(consultationRepository.existsById(anyString())).thenReturn(false);
+        when(consultationRepository.findById(anyString())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> consultationServiceImpl.update(request));
 
         // Check the number of calls
-        verify(consultationRepository).existsById(anyString());
+        verify(consultationRepository).findById(anyString());
         verify(consultationRepository, never()).save(any(Consultation.class));
 
         verifyNoInteractions(consultationMapper);

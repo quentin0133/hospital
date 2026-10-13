@@ -11,11 +11,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service implementation managing doctor profiles and user account linkage.
+ */
 @Service
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository repository;
     private final DoctorMapper mapper;
 
+    /**
+     * Constructs the doctor service implementation with required dependencies.
+     *
+     * @param repository the doctor entity repository
+     * @param mapper     the mapper converting between doctor entities and DTOs
+     */
     public DoctorServiceImpl(DoctorRepository repository, DoctorMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
@@ -65,7 +74,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void linkUser(String idDoctor, String id) {
         Doctor doctor = repository.findById(idDoctor)
-                .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));
+            .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));
 
         if (doctor.getIdUser() != null) {
             throw new AccountExistsException();
@@ -78,7 +87,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void unlinkUser(String idDoctor) {
         Doctor doctor = repository.findById(idDoctor)
-                .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));
+            .orElseThrow(() -> new ResourceNotFoundException("Doctor", idDoctor));
 
         if (doctor.getIdUser() == null) {
             throw new AccountNotFoundException();

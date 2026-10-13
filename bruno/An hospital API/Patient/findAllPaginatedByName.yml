@@ -7,20 +7,20 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/api/patient/name/:name?page=0&size=1"
+  url: "{{baseUrl}}/api/patient/name/:name?page=0&size=5"
   params:
     - name: page
       value: "0"
       type: query
     - name: size
-      value: "1"
+      value: "5"
       type: query
     - name: sort
       value: "[]"
       type: query
       disabled: true
     - name: name
-      value: Patrique
+      value: ""
       type: path
   auth: inherit
 

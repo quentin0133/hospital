@@ -10,7 +10,7 @@ http:
   url: "{{baseUrl}}/api/patient/id/:id"
   params:
     - name: id
-      value: 6a8f087b903bb0625fcf3995
+      value: 6acb5753a69ac74ffe69c5b8
       type: path
   auth: inherit
 

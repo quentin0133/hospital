@@ -10,11 +10,11 @@ http:
   url: "{{baseUrl}}/api/consultation/:idConsultation/medication/:idMedication"
   params:
     - name: idConsultation
-      value: 6a8f059b903bb0625fcf3991
+      value: 6acb5b4aa69ac74ffe69c5c4
       type: path
       description: The ID of the consultation
     - name: idMedication
-      value: 6a8f059b903bb0625fcf3992
+      value: 6acb653df7c3a27a600cbd76
       type: path
       description: The ID of the medication to remove
   auth: inherit

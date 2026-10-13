@@ -8,7 +8,7 @@ http:
   url: "{{baseUrl}}/files/:UUID_files"
   params:
     - name: UUID_files
-      value: 2fea30c1-5002-439d-a794-ce7018f0bf9d.png
+      value: ""
       type: path
   auth: inherit
 

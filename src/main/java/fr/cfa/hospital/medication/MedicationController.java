@@ -12,11 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 /**
  * The interface Medication controller.
  */
 @Tag(name = "Medications", description = "API to manage medications and prescriptions catalog")
 public interface MedicationController {
+
+    ResponseEntity<List<MedicationDto>> findAll();
 
     @Operation(summary = "Get medication by ID", description = "Retrieves a specific medication by its unique ID.")
     @ApiResponses(value = {

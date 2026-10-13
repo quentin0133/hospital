@@ -7,14 +7,14 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/api/user/add-doctor/:username?idDoctor=6a8f0835903bb0625fcf3993&username=DrPepe"
+  url: "{{baseUrl}}/api/user/add-doctor/:username?idDoctor=6acb54f3a69ac74ffe69c5aa&username=h.mercier"
   params:
     - name: idDoctor
-      value: 6a8f0835903bb0625fcf3993
+      value: 6acb54f3a69ac74ffe69c5aa
       type: query
       description: The unique ID of the doctor
     - name: username
-      value: DrPepe
+      value: h.mercier
       type: query
       description: The desired username
   auth: inherit

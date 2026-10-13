@@ -38,7 +38,7 @@ public class PatientControllerImpl implements PatientController {
 
     @Override
     @LogController
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
+    @PreAuthorize("@securityUtils.canAccessPatient(#id) or hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PatientDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
@@ -54,7 +54,7 @@ public class PatientControllerImpl implements PatientController {
 
     @Override
     @LogController
-    @PreAuthorize("#dto.id == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("@securityUtils.canAccessPatient(#dto.id) or hasRole('ROLE_ADMIN')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PatientDto> update(@RequestBody PatientPostDto dto) throws ResourceNotFoundException {
         return ResponseEntity.ok(service.update(dto));

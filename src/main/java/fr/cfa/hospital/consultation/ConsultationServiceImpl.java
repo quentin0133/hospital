@@ -20,7 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
+/**
+ * Service implementation for managing consultation entities.
+ * Handles persistence operations, attachment file storage, and consultation prescriptions.
+ */
 @Service
 public class ConsultationServiceImpl implements ConsultationService {
     private final ConsultationRepository repository;
@@ -28,11 +33,19 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final MedicationRepository medicationRepository;
     private final String uploadDir;
 
+    /**
+     * Constructs the consultation service implementation with required dependencies.
+     *
+     * @param repository           the consultation repository
+     * @param mapper               the mapper converting consultation entities and DTOs
+     * @param medicationRepository the medication repository for prescription association
+     * @param uploadDir            the filesystem directory path where attachments are stored
+     */
     public ConsultationServiceImpl(
-            ConsultationRepository repository,
-            ConsultationMapper mapper,
-            MedicationRepository medicationRepository,
-            @Value("${file.storage.path}") String uploadDir
+        ConsultationRepository repository,
+        ConsultationMapper mapper,
+        MedicationRepository medicationRepository,
+        @Value("${file.storage.path}") String uploadDir
     ) {
         this.repository = repository;
         this.mapper = mapper;
@@ -60,11 +73,10 @@ public class ConsultationServiceImpl implements ConsultationService {
             throw new NotProvidedUpdateIdException();
         }
 
-        if (!repository.existsById(dto.getId())) {
-            throw new ResourceNotFoundException("Consultation", dto.getId());
-        }
+        Consultation consultation = repository.findById(dto.getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Consultation", dto.getId()));
 
-        return mapper.toDto(repository.save(mapper.toEntity(dto)));
+        return mapper.toDto(repository.save(mapper.updateEntityFromDto(dto, consultation)));
     }
 
     @Override
@@ -85,8 +97,9 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     public FileDto uploadFiles(FilePostDto dto) throws IOException {
-        Consultation consultation = repository.findById(dto.getIdConsultation())
-                .orElseThrow(() -> new ResourceNotFoundException("Consultation", dto.getIdConsultation()));
+        Consultation consultation = Optional.ofNullable(dto.getIdConsultation())
+            .flatMap(repository::findById)
+            .orElseThrow(() -> new ResourceNotFoundException("Consultation", dto.getIdConsultation()));
 
         MultipartFile multipartFile = dto.getFile();
         if (multipartFile == null || multipartFile.isEmpty()) {
@@ -106,25 +119,22 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     public ConsultationDto addPrescription(String idConsultation, String idMedication, int quantity) {
-        Consultation consultation = repository.findById(idConsultation)
-                .orElseThrow(() -> new ResourceNotFoundException("Consultation", idConsultation));
+        Consultation consultation = Optional.ofNullable(idConsultation)
+            .flatMap(repository::findById)
+            .orElseThrow(() -> new ResourceNotFoundException("Consultation", idConsultation));
 
         consultation.getPrescriptions().stream()
-                .filter(pres -> pres.getMedication().getId().trim().equals(idMedication.trim()))
-                .findFirst()
-                .ifPresentOrElse(pres ->
+            .filter(pres -> pres.getMedication().getId().trim().equals(idMedication.trim()))
+            .findFirst()
+            .ifPresentOrElse(pres ->
                     pres.setQuantity(quantity + pres.getQuantity()),
-                    () -> {
-                        Medication medication = medicationRepository.findById(idMedication)
-                                .orElseThrow(() -> new ResourceNotFoundException("Medication", idMedication));
+                () -> {
+                    Medication medication = medicationRepository.findById(idMedication)
+                        .orElseThrow(() -> new ResourceNotFoundException("Medication", idMedication));
 
-                        Prescription newPrescription = new Prescription();
-                        newPrescription.setMedication(medication);
-                        newPrescription.setQuantity(quantity);
-
-                        consultation.getPrescriptions().add(newPrescription);
-                    }
-                );
+                    consultation.addPrescription(medication, quantity);
+                }
+            );
 
         return mapper.toDto(repository.save(consultation));
     }
@@ -132,10 +142,10 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     public ConsultationDto removePrescription(String idConsultation, String idMedication) {
         Consultation consultation = repository.findById(idConsultation)
-                .orElseThrow(() -> new ResourceNotFoundException("Consultation", idConsultation));
+            .orElseThrow(() -> new ResourceNotFoundException("Consultation", idConsultation));
 
         boolean isRemoved = consultation.getPrescriptions()
-                .removeIf(pres -> pres.getMedication().getId().equals(idMedication));
+            .removeIf(pres -> pres.getMedication().getId().equals(idMedication));
 
         if (!isRemoved) {
             throw new ResourceNotFoundException("Medication", idMedication);

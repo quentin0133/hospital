@@ -10,12 +10,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service implementation managing patient records, search queries,
+ * and user account associations.
+ */
 @Service
 public class PatientServiceImpl implements PatientService {
     private final PatientRepository repository;
     private final PatientMapper mapper;
     private final UserService userService;
 
+    /**
+     * Constructs the patient service implementation with required dependencies.
+     *
+     * @param repository  the patient entity repository
+     * @param mapper      the mapper converting between patient entities and DTOs
+     * @param userService the user service managing account identities
+     */
     public PatientServiceImpl(PatientRepository repository, PatientMapper mapper, UserService userService) {
         this.repository = repository;
         this.mapper = mapper;
@@ -56,7 +67,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void linkUser(String idPatient, String idUser) throws AccountExistsException {
         Patient patient = repository.findById(idPatient)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient", idPatient));
+            .orElseThrow(() -> new ResourceNotFoundException("Patient", idPatient));
 
         if (patient.getIdUser() != null) {
             throw new AccountExistsException();
@@ -69,7 +80,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void unlinkUser(String idPatient) throws AccountNotFoundException {
         Patient patient = repository.findById(idPatient)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient", idPatient));
+            .orElseThrow(() -> new ResourceNotFoundException("Patient", idPatient));
 
         if (patient.getIdUser() == null) {
             throw new AccountNotFoundException();

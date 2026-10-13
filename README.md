@@ -1,185 +1,193 @@
 # Hospital - Gestion d'un système hospitalier
 
-Ce projet est une application de gestion hospitalière développée pour gérer un hôpital, permettant la gestion des patients, médecins, rendez-vous et services médicaux.
-
-## Technologies utilisées
-
-- Langage : Java 21
-- Back-end : Spring boot 3.4.5
-- Base de données : MongoDB (SQL)
-- ORM : JPA Hibernate
-- Dépendance : Spring Web, Spring Security, Spring Data JPA, Mapstruct, JWT, Swagger UI,
-- Gestionnaire de dépendance : Maven
-- Autres : Docker, Sonarqube, JUnit, Bruno
+Application de gestion hospitalière conçue pour centraliser le suivi des patients, du personnel médical, des rendez-vous et des prescriptions au sein d'un établissement de santé.
 
 ---
 
-## Fonctionnalités de l'application
+## Stack technique
 
-L'application est structurée pour gérer les processus d'un établissement de santé, avec un accès strictement protégé et tracé :
-
-### Espace Public (Non connecté)
-* **Authentification :** Point d'entrée sécurisé permettant de se connecter (Login) avec vérification des identifiants.
-* **Sécurité :** Génération d'un token JWT nécessaire pour accéder à l'ensemble des autres routes de l'API.
-
-### Espace Médical & Administratif (Connecté)
-* **Gestion des Patients (CRUD) :** Création, lecture, modification et suppression des dossiers patients.
-    * Système de pagination intégré.
-    * Recherche dynamique par nom de patient.
-* **Gestion des Médecins (CRUD) :** Création, lecture, modification et suppression des profils médecins.
-    * Pagination et recherche par nom de médecin.
-* **Gestion des Consultations (CRUD) :** Création, suivi et mise à jour des rendez-vous médicaux.
-    * Historique : Récupération paginée de toutes les consultations liées à un patient spécifique.
-    * Pièces jointes : Upload sécurisé de fichiers (comptes-rendus, imagerie) directement rattachés à une consultation.
-* **Prescriptions & Médicaments :**
-    * Catalogue de médicaments (Création, lecture, mise à jour, suppression).
-    * Module de prescription automatique : Ajout de médicaments à une consultation existante (avec définition des quantités) via une table de liaison.
-
-### Fonctionnalités Techniques Transverses
-* **Gestion de la concurrence (Optimistic Locking) :** Système de versioning empêchant l'écrasement des données si deux utilisateurs modifient la même ressource simultanément (Renvoie une erreur *409 Conflict*).
-* **Traçabilité :** Mécanisme de logging automatique sur toutes les actions métier de l'API.
-* **Documentation Interactive :** Contrat d'API documenté et explorable en temps réel via Swagger UI (OpenAPI).
+| Catégorie | Technologies |
+| :--- | :--- |
+| **Langage** | Java 21 |
+| **Framework** | Spring Boot 3.3.5 |
+| **Persistance** | MongoDB (Spring Data MongoDB) |
+| **Sécurité** | Spring Security, JJWT (JSON Web Token) |
+| **Mapping & Outillage** | MapStruct, SpringDoc OpenAPI (Swagger UI) |
+| **Tests & Qualité** | JUnit 5, Testcontainers, JaCoCo, SonarQube |
+| **Gestionnaire de build** | Apache Maven |
+| **Client API** | Bruno |
+| **Conteneurisation** | Docker |
 
 ---
 
-## Installation et déploiement (Local)
+## Fonctionnalités
+
+L'accès à l'API est protégé et segmenté selon les rôles utilisateurs.
+
+### Espace public (Non authentifié)
+* **Authentification :** Point d'entrée sécurisé pour la connexion des utilisateurs.
+* **Sécurité JWT :** Génération d'un jeton porteur (*bearer token*) requis pour l'ensemble des routes protégées.
+
+### Espace médical et administratif (Authentifié)
+* **Dossiers patients (CRUD) :**
+  * Création, consultation, mise à jour et suppression des dossiers.
+  * Recherche dynamique par nom et pagination des résultats.
+* **Gestion du personnel soignant (CRUD) :**
+  * Administration des fiches médecins.
+  * Recherche par nom avec affichage paginé.
+* **Consultations médicales (CRUD) :**
+  * Planification et suivi des consultations.
+  * Historique complet paginé par patient.
+  * Gestion des pièces jointes (téléversement sécurisé de comptes-rendus et examens médicaux).
+* **Prescriptions et médicaments :**
+  * Référentiel complet des médicaments.
+  * Module d'ordonnance associant médicaments et posologies à chaque consultation.
+
+### Socle technique transverse
+* **Gestion de la concurrence (*Optimistic Locking*) :** Mécanisme de contrôle de version sur les documents pour empêcher l'écrasement simultané de données (retourne une réponse `409 Conflict`).
+* **Audit et traçabilité :** Journalisation systématique des opérations métier via un aspect AOP.
+* **Documentation OpenAPI :** Documentation interactive synchronisée via Swagger UI.
+
+---
+
+## Installation et déploiement local
 
 ### Prérequis
-- Java 21
-- Docker
+* Java 21 (JDK)
+* Docker et Docker Compose
+* Bruno *(optionnel, pour l'exécution des collections d'API)*
 
-### Optionnelle :
-- Bruno
+---
 
-### Étapes d'installation
+### 1. Clonage et dépendances
 
-1. **Cloner le dépôt :**
-```cmd
-git clone [URL_DU_DEPOT]
-cd [NOM_DU_DOSSIER]
+```bash
+git clone <URL_DU_DEPOT>
+cd hospital
+mvn clean dependency:resolve
 ```
 
-2. **Installer les dépendances via la commande ou IDE :**
-```cmd
-mvn dependency:resolve
-```
+---
 
-3. **Configurer le projet :**
-   Créer application-dev.properties, puis utiliser le modèle en dessous.
-```cmd
+### 2. Configuration des environnements
+
+Créez le fichier `src/main/resources/application-dev.properties` :
+
+```properties
 spring.application.name=hospital
 
-# Database infos
-spring.datasource.url=jdbc:mariadb://localhost:3307/hospital
-spring.datasource.username=[USUERNAME]
-spring.datasource.password=[PWD]
+# Base de données MongoDB
+spring.data.mongodb.uri=mongodb://localhost:27017/hospital
 
-spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-
-# File upload size limits for multipart requests
+# Téléversement de fichiers
 spring.servlet.multipart.enabled=true
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
-
-# Secret key for security-related features (JWT, encryption, etc.)
-jwt.secret.key=[SECRET]
-# Duration in seconds
-jwt.token.duration=3600
-
-# Create a default admin user
-app.default.username=[USERNAME_ADMIN]
-app.default.password=[PWD_ADMIN]
-
-# Location of files uploaded
 file.storage.path=files
 
+# Sécurité & JWT
+jwt.secret.key=<VOTRE_CLE_SECRETE_BASE64>
+jwt.token.duration=3600
+
+# Compte administrateur par défaut
+app.default.username=admin
+app.default.password=admin1234
+
+# Swagger OpenAPI
 springdoc.api-docs.enabled=true
 springdoc.swagger-ui.enabled=true
-spring.web.resources.add-mappings=true
 ```
 
-Pour les tests, ajouter application-test.properties
-```cmd
-spring.application.name=hospital
+Créez également le fichier `src/test/resources/application-test.properties` pour l'exécution des tests isolés :
 
-# Database infos
-spring.datasource.url=jdbc:mariadb://localhost:3307/hospital_test
-spring.datasource.username=[USERNAME]
-spring.datasource.password=[PWD]
+```properties
+spring.application.name=hospital-test
 
-spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
-spring.jpa.hibernate.ddl-auto=create-drop
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-
-# Script SQL for inserting data
-spring.sql.init.data-locations=classpath:db/test/data.json
-spring.sql.init.mode=always
-spring.jpa.defer-datasource-initialization=true
-
-# File upload size limits for multipart requests
 spring.servlet.multipart.enabled=true
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
+file.storage.path=files-test
 
-# Secret key for security-related features (JWT, encryption, etc.)
-jwt.secret.key=[SECRET]
-# Duration in seconds
+jwt.secret.key=dGVzdC1zZWNyZXQta2V5LWZvci1qdW5pdC10ZXN0aW5nLW9ubHktMTIzNDU2Nzg=
 jwt.token.duration=3600
 
-# Create a default admin user
 app.default.username=test
 app.default.password=test
-
-# Location of files uploaded
-file.storage.path=files-test
 ```
 
-4. **Lancer la base de donnée :**
-```cmd
+---
+
+### 3. Démarrage de la base de données
+
+Lancez l'instance MongoDB locale dans un conteneur :
+
+```bash
 docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
-Vous devriez pouvoir lancer l'application et ses tests.
+---
 
-### Suivre la dette technique avec Sonarqube
-**Lancer Sonarqube avec Docker :**
-```cmd
-docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:community
+### 4. Lancement de l'application
+
+Démarrez le serveur de développement :
+
+```bash
+mvn spring-boot:run
 ```
 
-Rendez sur l'URL http://localhost:9000, l'identifiant sera admin et le mot de passe admin.
+L'API est accessible sur `http://localhost:8080`.
 
-Une fois connecté, il va fallloir générer un token pour lancer l'analyse du projet.
+---
 
-On doit aller dans My Account > Security > Generate Tokens Générer un token d'application, copier dans un endroit sans le partager Revenez dans l'accueil et créer un projet localement, il vous demandera le token.
+## Documentation de l'API (Swagger UI)
 
-```
-sonar.host.url=http://host.docker.internal:9000
-sonar.token=[TOKEN]
+Une fois l'application démarrée, l'interface Swagger UI est consultable directement dans le navigateur :
 
-sonar.projectKey=[PROJECT-KEY]
-sonar.projectName=[PROJECT-NAME]
-sonar.projectVersion=1.0.0
-sonar.sources=src/main/java
-sonar.tests=src/test/java
-sonar.java.binaries=target/classes
-
-sonar.exclusions=**/config/**, **/HospitalApplication.java, **/*MapperImpl.java
-sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+```text
+http://localhost:8080/swagger-ui/index.html
 ```
 
-**Générer un rapport de test (avec Jacoco) :**
-```cmd
+Pour exécuter des requêtes sur les endpoints protégés depuis l'interface :
+1. Connectez-vous via l'endpoint `/api/auth/login`.
+2. Cliquez sur le bouton **Authorize** en haut à droite.
+3. Renseignez la valeur : `Bearer <votre_token_jwt>`.
+
+---
+
+## Tests fonctionnels avec Bruno
+
+Les requêtes de test sont centralisées dans le dossier `bruno` à la racine du projet (`bruno/An hospital API/`).
+
+1. Ouvrez **Bruno**.
+2. Sélectionnez **Open Collection**.
+3. Pointez sur le dossier `bruno/An hospital API`.
+4. Exécutez en priorité la requête du dossier `Authentication` pour instancier la variable de token JWT requise par les autres dossiers.
+
+---
+
+## Tests et analyse de code (SonarQube & JaCoCo)
+
+### Exécution des tests unitaires et génération du rapport de couverture
+
+```bash
 mvn clean test
 ```
 
-**Lancer une analyse :**
-```cmd
-docker run --rm -v "$(pwd):/usr/src" sonarsource/sonar-scanner-cli
-```
+Le rapport de couverture JaCoCo est compilé dans le dossier `target/site/jacoco/jacoco.xml`.
 
-S'il n'y a eu aucun souci, les analyses seront consultables sur l'interface de Sonarqube
+### Analyse statique avec SonarQube
+
+1. **Démarrer le serveur SonarQube local :**
+   ```bash
+   docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:community
+   ```
+
+2. **Accès au tableau de bord :**
+  * Rendez-vous sur `http://localhost:9000` (identifiants par défaut : `admin` / `admin`).
+  * Créez un projet manuellement et générez un jeton d'analyse (*Project Analysis Token*).
+
+3. **Lancer le scanner :**
+   Exécutez l'analyse directement via le plugin Maven en passant votre jeton :
+   ```bash
+   mvn clean verify sonar:sonar -Dsonar.host.url="http://localhost:9000" -Dsonar.token="<VOTRE_TOKEN>"
+   ```

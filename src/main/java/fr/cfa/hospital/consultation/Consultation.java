@@ -2,6 +2,7 @@ package fr.cfa.hospital.consultation;
 
 import fr.cfa.hospital.doctor.Doctor;
 import fr.cfa.hospital.file.File;
+import fr.cfa.hospital.medication.Medication;
 import fr.cfa.hospital.patient.Patient;
 import fr.cfa.hospital.prescription.Prescription;
 import org.springframework.data.annotation.Id;
@@ -127,5 +128,13 @@ public class Consultation {
                 ", patient=" + patient +
                 ", file=" + file +
                 '}';
+    }
+
+    public void addPrescription(Medication medication, int quantity) {
+        Prescription newPrescription = new Prescription();
+        newPrescription.setMedication(medication);
+        newPrescription.setQuantity(quantity);
+
+        prescriptions.add(newPrescription);
     }
 }
