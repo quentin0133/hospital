@@ -13,6 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of {@link AuthService} handling authentication requests.
+ * Authenticates user credentials via {@link AuthenticationManager} and generates JWT tokens.
+ */
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
@@ -20,6 +24,14 @@ public class AuthServiceImpl implements AuthService {
     private final AuthMapper mapper;
     private final JwtUtils jwtUtils;
 
+    /**
+     * Constructs the authentication service implementation with required dependencies.
+     *
+     * @param authenticationManager manager responsible for validating credentials
+     * @param mapper                mapper converting authentication data into login responses
+     * @param userMapper            mapper converting user entities to DTOs
+     * @param jwtUtils              utility generating signed JWT tokens
+     */
     public AuthServiceImpl(AuthenticationManager authenticationManager, AuthMapper mapper, UserMapper userMapper, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.mapper = mapper;

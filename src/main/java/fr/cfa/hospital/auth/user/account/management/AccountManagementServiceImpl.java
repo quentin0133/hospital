@@ -17,6 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service implementation handling user account provisioning and credential lifecycle.
+ * Coordinates user creation and linkage with patient and doctor domain profiles,
+ * as well as secure password updates for authenticated users.
+ */
 @Service
 public class AccountManagementServiceImpl implements AccountManagementService {
     private final UserService userService;
@@ -24,7 +29,10 @@ public class AccountManagementServiceImpl implements AccountManagementService {
     private final DoctorService doctorService;
     private final PasswordEncoder passwordEncoder;
 
-    public AccountManagementServiceImpl(UserService userService, PatientService patientService, DoctorService doctorService, PasswordEncoder passwordEncoder) {
+    public AccountManagementServiceImpl(UserService userService,
+                                        PatientService patientService,
+                                        DoctorService doctorService,
+                                        PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.patientService = patientService;
         this.doctorService = doctorService;
@@ -87,6 +95,11 @@ public class AccountManagementServiceImpl implements AccountManagementService {
         userService.updatePassword(userSecurity.getUser().getId(), passwordEncoder.encode(changePassword.getNewPassword()));
     }
 
+    /**
+     * Generates a pseudo-random temporary password prefixed with {@code temp-}.
+     *
+     * @return the generated raw temporary password string
+     */
     private String generateRandomPassword() {
         return "temp-" + java.util.UUID.randomUUID().toString().substring(0, 8);
     }

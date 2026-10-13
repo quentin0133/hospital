@@ -1,7 +1,7 @@
 info:
   name: save
   type: http
-  seq: 2
+  seq: 3
   tags:
     - medication-controller
 
@@ -12,7 +12,7 @@ http:
     type: json
     data: |-
       {
-        "label": "Paracétamol"
+        "label": "Dafalgan"
       }
   auth: inherit
 

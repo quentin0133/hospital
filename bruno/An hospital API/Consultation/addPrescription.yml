@@ -13,10 +13,10 @@ http:
       value: "3"
       type: query
     - name: idConsultation
-      value: 6a8f09a29feb1e2626ad69a0
+      value: ""
       type: path
     - name: idMedication
-      value: 6a8f059b903bb0625fcf3991
+      value: ""
       type: path
   auth: inherit
 

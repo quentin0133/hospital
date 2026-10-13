@@ -12,11 +12,11 @@ http:
     type: json
     data: |-
       {
-        "id": "6a8f09a29feb1e2626ad69a0",
-        "version": 1,
-        "date": "2026-08-28",
-        "doctorId": "6a8f0835903bb0625fcf3993",
-        "patientId": "6a8f087b903bb0625fcf3995"
+        "id": "",
+        "version": 3,
+        "date": "2026-09-17",
+        "doctorId": "",
+        "patientId": ""
       }
   auth: inherit
 

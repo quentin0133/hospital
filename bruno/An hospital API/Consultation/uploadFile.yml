@@ -11,14 +11,12 @@ http:
   body:
     type: multipart-form
     data:
-      - name: id
+      - name: idConsultation
         type: text
-        value: 6a8fde8c33cae33163eb3a6c
+        value: ""
       - name: file
-        type: file
-        value:
-          - C:\Users\Quentin YAHIA\Downloads\kaaris-arti.png
-        contentType: image/png
+        type: text
+        value: ""
   auth: inherit
 
 settings:

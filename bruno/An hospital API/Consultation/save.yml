@@ -12,10 +12,10 @@ http:
     type: json
     data: |-
       {
-        "date": "2026-09-12",
-        "doctorId": "6a917f5252c94d278e5bc2ea",
-        "patientId": "6a917f5552c94d278e5bc2eb"
-      }
+          "date": "2026-12-01",
+          "doctorId": "6acb54f3a69ac74ffe69c5aa",
+          "patientId": "6acb57dba69ac74ffe69c5c0"
+        }
   auth: inherit
 
 settings:

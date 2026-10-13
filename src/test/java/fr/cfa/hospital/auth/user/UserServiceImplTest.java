@@ -41,11 +41,14 @@ class UserServiceImplTest {
     @Test
     void loadUserByUsername_validInput() {
         User user = new User();
+        user.setUsername("john_doe");
+        user.setPassword("secret");
+        user.setRole("ROLE_USER");
         UserDetails expected = new UserSecurity(user);
 
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
 
-        UserDetails result = userServiceImpl.loadUserByUsername(anyString());
+        UserDetails result = userServiceImpl.loadUserByUsername(user.getUsername());
 
         assertEquals(expected.getUsername(), result.getUsername());
         assertEquals(expected.getAuthorities(), result.getAuthorities());

@@ -12,7 +12,7 @@ http:
     type: json
     data: |-
       {
-        "name": "Pépé NUKEMAN"
+        "name": "Nicolas FONTAINE"
       }
   auth: inherit
 

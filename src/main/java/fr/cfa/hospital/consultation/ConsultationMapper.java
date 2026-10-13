@@ -13,6 +13,7 @@ import fr.cfa.hospital.patient.PatientRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {MedicationMapper.class, FileMapper.class})
@@ -29,6 +30,14 @@ public abstract class ConsultationMapper extends GenericMapperAbstract<Consultat
     @Mapping(target = "patient", source = "patientId")
     @Mapping(target = "file", ignore = true)
     public abstract Consultation toEntity(ConsultationPostDto dto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "version", source = "version")
+    @Mapping(target = "prescriptions", ignore = true)
+    @Mapping(target = "file", ignore = true)
+    @Mapping(target = "doctor", source = "doctorId")
+    @Mapping(target = "patient", source = "patientId")
+    public abstract Consultation updateEntityFromDto(ConsultationPostDto dto, @MappingTarget Consultation consultation);
 
     public Doctor mapDoctor(String idDoctor) {
         return doctorRepository.findById(idDoctor)

@@ -10,19 +10,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service implementation for managing medication catalog entries.
+ */
 @Service
 public class MedicationServiceImpl implements MedicationService {
     private final MedicationRepository repository;
     private final MedicationMapper mapper;
 
+    /**
+     * Constructs the medication service implementation with required dependencies.
+     *
+     * @param repository the medication entity repository
+     * @param mapper     the mapper converting between medication entities and DTOs
+     */
     public MedicationServiceImpl(MedicationRepository repository, MedicationMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
     @Override
-    public List<MedicationDto> findAll(Pageable pageable) {
-        return repository.findAll(pageable).stream().map(mapper::toDto).toList();
+    public List<MedicationDto> findAll() {
+        return repository.findAll().stream().map(mapper::toDto).toList();
     }
 
     @Override

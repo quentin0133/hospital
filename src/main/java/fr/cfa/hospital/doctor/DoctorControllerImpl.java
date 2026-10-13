@@ -54,7 +54,7 @@ public class DoctorControllerImpl implements DoctorController {
 
     @Override
     @LogController
-    @PreAuthorize("#dto.id == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorDto> update(@RequestBody DoctorPostDto dto) throws ResourceNotFoundException {
         return ResponseEntity.ok(service.update(dto));

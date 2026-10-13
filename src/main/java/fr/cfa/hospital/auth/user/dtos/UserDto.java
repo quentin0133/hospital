@@ -46,7 +46,7 @@ public class UserDto {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return id != null && Objects.equals(id, userDto.id);
+        return Objects.equals(id, userDto.id);
     }
 
     @Override

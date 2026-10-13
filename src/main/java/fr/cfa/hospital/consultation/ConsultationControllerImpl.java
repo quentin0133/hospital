@@ -26,7 +26,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, params = {"page", "size"})
     public ResponseEntity<Page<ConsultationDto>> findAll(Pageable pageable) {
         return ResponseEntity.ok(service.findAll(pageable));
@@ -34,7 +34,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
@@ -42,7 +42,7 @@ public class ConsultationControllerImpl implements ConsultationController {
 
     @Override
     @LogController
-    @PreAuthorize("#id == authentication.principal.user.id or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("@securityUtils.canAccessPatient(#id) or hasRole('ROLE_DOCTOR') or hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE, params = {"page", "size"})
     public ResponseEntity<Page<ConsultationDto>> findByPatientId(@PathVariable String id, Pageable pageable) {
         return ResponseEntity.ok(service.findByPatientId(id, pageable));
