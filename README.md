@@ -76,26 +76,31 @@ Créez le fichier `src/main/resources/application-dev.properties` :
 ```properties
 spring.application.name=hospital
 
-# Base de données MongoDB
-spring.data.mongodb.uri=mongodb://localhost:27017/hospital
+# Database
+spring.data.mongodb.uri=mongodb://localhost:27017/<DB>
 
-# Téléversement de fichiers
+# File upload size limits for multipart requests
 spring.servlet.multipart.enabled=true
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
-file.storage.path=files
 
-# Sécurité & JWT
-jwt.secret.key=<VOTRE_CLE_SECRETE_BASE64>
+# Secret key for security-related features (JWT, encryption, etc.)
+jwt.secret.key=<SECRET_KEY>
+# Duration in seconds
 jwt.token.duration=3600
 
-# Compte administrateur par défaut
-app.default.username=admin
-app.default.password=admin1234
+# Location of files uploaded
+file.storage.path=files
 
-# Swagger OpenAPI
+# Create a default admin user
+app.default.username=admin
+app.default.password=<ADMIN_PW>
+
 springdoc.api-docs.enabled=true
 springdoc.swagger-ui.enabled=true
+spring.web.resources.add-mappings=true
+
+logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
 ```
 
 Créez également le fichier `src/test/resources/application-test.properties` pour l'exécution des tests isolés :
@@ -103,16 +108,24 @@ Créez également le fichier `src/test/resources/application-test.properties` po
 ```properties
 spring.application.name=hospital-test
 
+# Database
+spring.data.mongodb.uri=mongodb://localhost:27017/<DB>-test
+
 spring.servlet.multipart.enabled=true
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
-file.storage.path=files-test
 
-jwt.secret.key=dGVzdC1zZWNyZXQta2V5LWZvci1qdW5pdC10ZXN0aW5nLW9ubHktMTIzNDU2Nzg=
+# Secret key for security-related features (JWT, encryption, etc.)
+jwt.secret.key=<SECRET_KEY>
+# Duration in seconds
 jwt.token.duration=3600
 
+# Create a default admin user
 app.default.username=test
 app.default.password=test
+
+# Location of files uploaded
+file.storage.path=files-test
 ```
 
 ---
